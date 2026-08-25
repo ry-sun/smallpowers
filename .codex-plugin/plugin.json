@@ -1,0 +1,34 @@
+{
+  "name": "smallpowers",
+  "version": "0.1.0",
+  "description": "Explicit-only Codex workflows for feature development, repository simplification, and safe Git-worktree workspace operations.",
+  "author": {
+    "name": "Ryan Sun"
+  },
+  "license": "MIT",
+  "keywords": ["codex", "skills", "software-development", "workflow", "git-worktrees"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Smallpowers",
+    "shortDescription": "Explicit development and Git-worktree workflows.",
+    "longDescription": "Smallpowers instructions stay unloaded until explicitly invoked, then progressively load detailed feature stages, feedback routing, complexity audits, scoped cleanup, or bounded Git-worktree workspace operations.",
+    "developerName": "Ryan Sun",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Approved feature specifications",
+      "Dependency-graph execution",
+      "Post-implementation feedback routing",
+      "Correctness and implementation-quality review",
+      "Repository, test, and documentation simplification",
+      "Transactional worktree workspace setup and restore",
+      "Task-scoped worktree binding and merged-branch cleanup"
+    ],
+    "composerIcon": "./assets/smallpowers-logo.png",
+    "logo": "./assets/smallpowers-logo.png",
+    "defaultPrompt": [
+      "Use $smallpowers to design and implement this feature.",
+      "Use $smallpowers-audit to find removable repository complexity.",
+      "Use $work-in /absolute/worktree/path to bind this task to that Git worktree."
+    ]
+  }
+}

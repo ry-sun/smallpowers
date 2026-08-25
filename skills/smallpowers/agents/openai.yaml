@@ -1,0 +1,7 @@
+interface:
+  display_name: "Smallpowers"
+  short_description: "Design and implement features through one graph"
+  default_prompt: "Use $smallpowers to design and implement this feature from specification through reviewed code."
+
+policy:
+  allow_implicit_invocation: false

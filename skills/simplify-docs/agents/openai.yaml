@@ -1,0 +1,7 @@
+interface:
+  display_name: "Simplify Docs"
+  short_description: "Keep repository docs concise and current"
+  default_prompt: "Use $simplify-docs to simplify the current repository's documentation or the scope I name."
+
+policy:
+  allow_implicit_invocation: false

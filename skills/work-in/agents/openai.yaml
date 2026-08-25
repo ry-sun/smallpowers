@@ -1,0 +1,7 @@
+interface:
+  display_name: "Work In"
+  short_description: "Bind work to one exact Git worktree"
+  default_prompt: "Use $work-in with an absolute path to bind this conversation to that Git worktree."
+
+policy:
+  allow_implicit_invocation: false
