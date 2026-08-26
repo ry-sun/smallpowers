@@ -50,12 +50,6 @@ REQUIRED_SKILL_RESOURCES = {
     "smallpowers-audit": frozenset({"references/audit-method.md"}),
 }
 
-SHARED_WORKTREE_ENGINE_PATH = PurePosixPath("scripts/worktree_workspace.py")
-SHARED_WORKTREE_ENGINE_LINK = "../../scripts/worktree_workspace.py"
-SHARED_WORKTREE_ENGINE_SKILLS = frozenset(
-    {"setup-worktree-workspace", "restore-regular-workspace"}
-)
-
 KEBAB_CASE_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 SEMVER_RE = re.compile(
     r"^(0|[1-9]\d*)\."
@@ -167,7 +161,7 @@ def validate_no_foreign_skill_invocations(
         owner_label = (
             f"skill {owner_skill!r} resource"
             if owner_skill is not None
-            else "shared worktree engine"
+            else "shared resource"
         )
         error = f"{owner_label} must not invoke ${invoked_skill}: {resource_label}"
         if error not in errors:
@@ -333,102 +327,6 @@ def validate_required_skill_resources(
                 f"skill {skill_dir.name!r} required resource must contain a "
                 f"non-heading instruction line: {relative_path}"
             )
-
-
-def directly_links_shared_worktree_engine(text: str) -> bool:
-    """Return whether visible Markdown links the exact reviewed engine path."""
-
-    visible_text = visible_markdown_text(text)
-    for match in INLINE_MARKDOWN_LINK_RE.finditer(visible_text):
-        if match.group("image") or escaped_by_odd_backslashes(
-            visible_text, match.start()
-        ):
-            continue
-        raw_target = match.group("target").strip()
-        if raw_target.startswith("<") and ">" in raw_target:
-            target = raw_target[1 : raw_target.index(">")]
-        else:
-            target = raw_target.split(maxsplit=1)[0]
-        if target == SHARED_WORKTREE_ENGINE_LINK:
-            return True
-    return False
-
-
-def validate_shared_worktree_engine(
-    skill_dirs: list[Path], errors: list[str]
-) -> None:
-    """Validate the sole reviewed resource shared across public skills."""
-
-    shared_skill_dirs = [
-        skill_dir
-        for skill_dir in skill_dirs
-        if skill_dir.name in SHARED_WORKTREE_ENGINE_SKILLS
-    ]
-    if not shared_skill_dirs:
-        return
-
-    engine_path = ROOT / SHARED_WORKTREE_ENGINE_PATH
-    if path_has_symlink_component(engine_path, ROOT):
-        errors.append(
-            "shared worktree workspace engine must not be a symlink or traverse one: "
-            f"{SHARED_WORKTREE_ENGINE_PATH}"
-        )
-    elif not engine_path.is_file():
-        errors.append(
-            "shared worktree workspace engine must be a regular file: "
-            f"{SHARED_WORKTREE_ENGINE_PATH}"
-        )
-    else:
-        try:
-            resolved_engine = engine_path.resolve(strict=True)
-        except (OSError, RuntimeError) as exc:
-            errors.append(f"unable to resolve shared worktree workspace engine: {exc}")
-        else:
-            if not resolved_engine.is_relative_to(ROOT.resolve()):
-                errors.append(
-                    "shared worktree workspace engine must resolve inside the repository"
-                )
-            else:
-                try:
-                    engine_text = engine_path.read_text(encoding="utf-8")
-                except (OSError, UnicodeDecodeError) as exc:
-                    errors.append(
-                        f"unable to read shared worktree workspace engine: {exc}"
-                    )
-                else:
-                    validate_no_foreign_skill_invocations(
-                        engine_text,
-                        None,
-                        str(SHARED_WORKTREE_ENGINE_PATH),
-                        errors,
-                    )
-
-    for skill_dir in shared_skill_dirs:
-        skill_md = skill_dir / "SKILL.md"
-        if not skill_md.is_file() or path_has_symlink_component(skill_md, skill_dir):
-            continue
-        try:
-            skill_text = skill_md.read_text(encoding="utf-8")
-        except (OSError, UnicodeDecodeError):
-            continue
-        if not directly_links_shared_worktree_engine(skill_text):
-            errors.append(
-                f"skill {skill_dir.name!r} SKILL.md must directly link the shared "
-                f"worktree workspace engine: {SHARED_WORKTREE_ENGINE_LINK}"
-            )
-
-
-def is_allowed_shared_worktree_engine_link(
-    skill_dir: Path, markdown_path: Path, resolved: Path
-) -> bool:
-    """Allow only setup/restore SKILL.md to reference the exact shared engine."""
-
-    if skill_dir.name not in SHARED_WORKTREE_ENGINE_SKILLS:
-        return False
-    if markdown_path.resolve() != (skill_dir / "SKILL.md").resolve():
-        return False
-    expected = (ROOT / SHARED_WORKTREE_ENGINE_PATH).resolve()
-    return resolved == expected
 
 
 def direct_relative_markdown_links(text: str) -> set[str]:
@@ -1201,12 +1099,7 @@ def validate_relative_markdown_links(
                 f"skill {skill_dir.name!r} link resolves outside the repository: "
                 f"{target}"
             )
-        elif (
-            not resolved.is_relative_to(skill_dir.resolve())
-            and not is_allowed_shared_worktree_engine_link(
-                skill_dir, markdown_path, resolved
-            )
-        ):
+        elif not resolved.is_relative_to(skill_dir.resolve()):
             errors.append(
                 f"skill {skill_dir.name!r} link resolves outside its skill directory: "
                 f"{target}"
@@ -1271,8 +1164,6 @@ def validate_skills(require_skill: bool, errors: list[str]) -> int:
             errors.append(
                 "release validation is missing approved skills: " + ", ".join(missing)
             )
-
-    validate_shared_worktree_engine(skill_dirs, errors)
 
     for skill_dir in skill_dirs:
         if not KEBAB_CASE_RE.fullmatch(skill_dir.name):

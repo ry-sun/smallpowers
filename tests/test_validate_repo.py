@@ -354,14 +354,6 @@ class SkillValidationTests(unittest.TestCase):
                 validator.REQUIRED_SKILL_RESOURCES.get(skill_name, ())
             )
         )
-        if skill_name in validator.SHARED_WORKTREE_ENGINE_SKILLS:
-            router_links += (
-                "- [worktree workspace engine]"
-                f"({validator.SHARED_WORKTREE_ENGINE_LINK})\n"
-            )
-            shared_engine = root / validator.SHARED_WORKTREE_ENGINE_PATH
-            shared_engine.parent.mkdir(parents=True, exist_ok=True)
-            shared_engine.write_text("# test engine\n", encoding="utf-8")
         (skill_dir / "SKILL.md").write_text(
             f"---\n{frontmatter}\n---\n\n# Test Skill\n\nInstructions.\n\n"
             f"{router_links}",
@@ -856,68 +848,6 @@ class SkillValidationTests(unittest.TestCase):
 
         self.assertEqual(errors, [])
 
-    def test_allows_exact_shared_engine_link_for_reviewed_skills(self) -> None:
-        for skill_name in sorted(validator.SHARED_WORKTREE_ENGINE_SKILLS):
-            with self.subTest(skill_name=skill_name):
-                errors = self._validate_fixture(
-                    skill_name=skill_name,
-                    frontmatter=(
-                        f"name: {skill_name}\n"
-                        f"description: Use when ${skill_name} is explicitly requested."
-                    ),
-                )
-
-                self.assertEqual(errors, [])
-
-    def test_rejects_shared_engine_link_from_another_skill(self) -> None:
-        def mutate(repository_root: Path, skill_dir: Path) -> None:
-            shared_engine = repository_root / validator.SHARED_WORKTREE_ENGINE_PATH
-            shared_engine.parent.mkdir(parents=True, exist_ok=True)
-            shared_engine.write_text("# test engine\n", encoding="utf-8")
-            skill_md = skill_dir / "SKILL.md"
-            skill_md.write_text(
-                skill_md.read_text(encoding="utf-8")
-                + "\n[engine](../../scripts/worktree_workspace.py)\n",
-                encoding="utf-8",
-            )
-
-        errors = self._validate_fixture(
-            skill_name="simplify-docs",
-            frontmatter=(
-                "name: simplify-docs\n"
-                "description: Use when $simplify-docs is explicitly requested."
-            ),
-            mutate=mutate,
-        )
-
-        self.assertTrue(
-            any("link resolves outside its skill directory" in error for error in errors),
-            errors,
-        )
-
-    def test_rejects_shared_engine_link_from_setup_supporting_resource(self) -> None:
-        def mutate(_repository_root: Path, skill_dir: Path) -> None:
-            resource = skill_dir / "references" / "notes.md"
-            resource.parent.mkdir(parents=True, exist_ok=True)
-            resource.write_text(
-                "# Notes\n\n[engine](../../../scripts/worktree_workspace.py)\n",
-                encoding="utf-8",
-            )
-
-        errors = self._validate_fixture(
-            skill_name="setup-worktree-workspace",
-            frontmatter=(
-                "name: setup-worktree-workspace\n"
-                "description: Use when $setup-worktree-workspace is explicitly requested."
-            ),
-            mutate=mutate,
-        )
-
-        self.assertTrue(
-            any("link resolves outside its skill directory" in error for error in errors),
-            errors,
-        )
-
     def test_worktree_skills_are_valid_without_reference_resources(self) -> None:
         for skill_name in (
             "cleanup-worktree",
@@ -935,89 +865,6 @@ class SkillValidationTests(unittest.TestCase):
                 )
 
                 self.assertEqual(errors, [])
-
-    def test_requires_reviewed_skill_to_link_shared_engine_directly(self) -> None:
-        def mutate(_repository_root: Path, skill_dir: Path) -> None:
-            skill_md = skill_dir / "SKILL.md"
-            skill_md.write_text(
-                skill_md.read_text(encoding="utf-8").replace(
-                    "- [worktree workspace engine]"
-                    f"({validator.SHARED_WORKTREE_ENGINE_LINK})\n",
-                    "",
-                ),
-                encoding="utf-8",
-            )
-
-        errors = self._validate_fixture(
-            skill_name="setup-worktree-workspace",
-            frontmatter=(
-                "name: setup-worktree-workspace\n"
-                "description: Use when $setup-worktree-workspace is explicitly requested."
-            ),
-            mutate=mutate,
-        )
-
-        self.assertTrue(
-            any("must directly link the shared" in error for error in errors), errors
-        )
-
-    def test_rejects_symlinked_shared_engine(self) -> None:
-        def mutate(repository_root: Path, _skill_dir: Path) -> None:
-            shared_engine = repository_root / validator.SHARED_WORKTREE_ENGINE_PATH
-            target = shared_engine.with_name("engine-target.py")
-            shared_engine.replace(target)
-            shared_engine.symlink_to(target)
-
-        errors = self._validate_fixture(
-            skill_name="restore-regular-workspace",
-            frontmatter=(
-                "name: restore-regular-workspace\n"
-                "description: Use when $restore-regular-workspace is explicitly requested."
-            ),
-            mutate=mutate,
-        )
-
-        self.assertTrue(
-            any("engine must not be a symlink" in error for error in errors), errors
-        )
-
-    def test_rejects_missing_shared_engine(self) -> None:
-        def mutate(repository_root: Path, _skill_dir: Path) -> None:
-            (repository_root / validator.SHARED_WORKTREE_ENGINE_PATH).unlink()
-
-        errors = self._validate_fixture(
-            skill_name="setup-worktree-workspace",
-            frontmatter=(
-                "name: setup-worktree-workspace\n"
-                "description: Use when $setup-worktree-workspace is explicitly requested."
-            ),
-            mutate=mutate,
-        )
-
-        self.assertTrue(
-            any("engine must be a regular file" in error for error in errors), errors
-        )
-
-    def test_rejects_skill_invocation_in_shared_engine(self) -> None:
-        def mutate(repository_root: Path, _skill_dir: Path) -> None:
-            shared_engine = repository_root / validator.SHARED_WORKTREE_ENGINE_PATH
-            shared_engine.write_text(
-                '# helper must not call $using-git-worktrees\n', encoding="utf-8"
-            )
-
-        errors = self._validate_fixture(
-            skill_name="setup-worktree-workspace",
-            frontmatter=(
-                "name: setup-worktree-workspace\n"
-                "description: Use when $setup-worktree-workspace is explicitly requested."
-            ),
-            mutate=mutate,
-        )
-
-        self.assertTrue(
-            any("shared worktree engine must not invoke" in error for error in errors),
-            errors,
-        )
 
     def test_allows_namespaced_self_invocation_for_every_skill(self) -> None:
         for skill_name in sorted(validator.APPROVED_SKILLS):

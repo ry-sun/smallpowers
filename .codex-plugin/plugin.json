@@ -20,7 +20,7 @@
       "Post-implementation feedback routing",
       "Correctness and implementation-quality review",
       "Repository, test, and documentation simplification",
-      "Transactional worktree workspace setup and restore",
+      "Simple worktree workspace setup and restore",
       "Task-scoped worktree binding and merged-branch cleanup"
     ],
     "composerIcon": "./assets/smallpowers-logo.png",
@@ -28,7 +28,7 @@
     "defaultPrompt": [
       "Use $smallpowers to design and implement this feature.",
       "Use $smallpowers-audit to find removable repository complexity.",
-      "Use $work-in /absolute/worktree/path to bind this task to that Git worktree."
+      "Use $work-in refactor/worktree to create or reuse that branch worktree and bind this task to it."
     ]
   }
 }

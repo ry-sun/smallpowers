@@ -27,10 +27,10 @@ All Smallpowers skills are explicit-only: Codex may show their names and short d
 | `$smallpowers-audit` | Reports removable complexity across a repository without changing files. |
 | `$simplify-test-cases [scope]` | Removes redundant or trivial tests while preserving meaningful coverage. Omit the scope to inspect the whole repository. |
 | `$simplify-docs [scope]` | Rewrites documentation around current usage and handoff knowledge. Omit the scope to inspect the whole repository. |
-| `$setup-worktree-workspace [repository-path]` | Converts an eligible regular checkout into a worktree-oriented workspace after a state-bound preview and confirmation. |
-| `$restore-regular-workspace <workspace-path>` | Restores a worktree workspace when only its canonical primary worktree remains. |
-| `$work-in <branch/name> [--ref <ref>]` | Reuses or creates the branch-mirrored worktree and binds the current task to it; a new branch defaults to the canonical checkout's current `HEAD`. |
-| `$cleanup-worktree [absolute-worktree-path] [review]` | Verifies merge state, previews cleanup, removes the merged worktree and eligible local branch, and fast-forwards the base. |
+| `$setup-worktree-workspace [repository-path]` | Moves a regular checkout into a simple worktree container after a plain `approve`. |
+| `$restore-regular-workspace [workspace-path]` | Moves the sole canonical checkout back out after a plain `approve`. |
+| `$work-in <branch-name>` | Reuses or creates the branch-mirrored worktree and binds the current task to it. |
+| `$cleanup-worktree [worktree-path]` | Updates the primary branch, verifies merge/squash/rebase integration, and removes the clean local worktree and branch. |
 
 Smallpowers contains no global router, lifecycle hook, persistent mode, or skill-to-skill invocation.
 
@@ -58,9 +58,7 @@ Detailed stage playbooks live under [`skills/smallpowers/references/`](skills/sm
 
 ## Worktree safety
 
-The four worktree skills are independent entrypoints. Setup and restore use preview-bound, revalidated transactions. Work-in maintains a task-scoped path and branch contract. Cleanup proves the exact target and merge state before it removes anything.
-
-The workflows inspect repository remotes to distinguish GitHub from GitLab and report the matching `gh` or `glab` CLI and authentication state. They do not install tools, start login, push, delete remote branches, or create pull or merge requests.
+The four worktree skills are independent, self-contained entrypoints built from ordinary Git and shell commands. Setup and restore explain the exact move and wait for a simple approval. Work-in maintains a task-scoped path and branch contract. Cleanup accepts ordinary merges plus squash and rebase integration, directly deletes verified generated directories to speed removal, and fast-forward-pulls the primary branch. The workflows do not push or delete remote branches.
 
 ## Development
 
