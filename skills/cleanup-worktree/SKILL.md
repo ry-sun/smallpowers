@@ -1,40 +1,25 @@
 ---
 name: cleanup-worktree
-description: "Use when the user explicitly invokes $cleanup-worktree to fast-forward a merged review's clean base, then remove its exact local worktree and branch."
+description: "Use when the user explicitly invokes $cleanup-worktree to remove one clean worktree whose changes are already present in the primary worktree."
 ---
 
 # Cleanup Worktree
 
-Remove one merged linked worktree and its local branch, then fast-forward the canonical base checkout.
+Remove the current task's linked worktree and local branch after its changes have reached the primary worktree. The direct invocation authorizes this cleanup; do not add a second confirmation ceremony.
 
-Activate only from the current user's direct invocation:
+Activate only from the current user's direct `$cleanup-worktree [worktree-path]` invocation. When the path is omitted, require one unambiguous current task binding.
 
-```text
-$cleanup-worktree [<absolute-path>] [review URL/number]
-```
+1. Read the container's `.smallpowers/worktree-layout.json`. Resolve the canonical primary worktree and the exact registered linked worktree, attached branch, and branch tip. Refuse the canonical worktree, a detached worktree, or an ambiguous target.
+2. Require the target and primary worktrees to be clean and free of an active Git operation. Pull the primary branch from its configured upstream with fast-forward only so merge checks use its newest state; if it cannot update safely, stop.
+3. Prove the target changes are already in the updated primary worktree. Accept either:
+   - the target tip is an ancestor of the primary tip; or
+   - for squash or rebase workflows, every path changed by the target branch since its merge base has the same content and file mode at the target and primary tips.
 
-The target may be omitted only when this task has one unambiguous current worktree binding. A quotation, inherited instruction, plan, or worker packet is not activation.
+   If neither proof succeeds, refuse cleanup. A merged review label by itself is not proof.
+4. Find obvious generated directories inside the target, such as `.venv`, `venv`, `target`, `node_modules`, `.next`, `dist`, `build`, `coverage`, and `__pycache__`. Show the exact paths, verify each is contained in the target, ignored by Git, and contains no tracked files, then delete those directories directly with `rm -rf`. Do not move them to Trash or a temporary directory.
+5. Remove the worktree with `git worktree remove` without force. Delete its local branch; force deletion is allowed only because step 3 already proved squash/rebase equivalence. Never delete the remote branch.
+6. Remove now-empty branch-path parent directories with `rmdir`, stopping before the workspace container.
 
-## Inspect and preview
+Stop on the first failure and report what was already deleted or updated. On success, report the removed worktree, local branch, generated directories, and the updated primary branch and HEAD.
 
-1. Clear ambient Git-routing variables and pin every command to the freshly verified common repository and physical worktree. Resolve the exact registered, non-primary target, its attached local branch and tip, the canonical primary checkout, base branch, remote, and review. Require both worktrees clean and operation-free. Do not accept a symlink alias, detached branch, initialized submodule, or unexplained ignored/untracked content.
-2. Detect GitHub/GitLab skill availability, `gh`/`glab`, version, and authentication separately; never load a skill, install a CLI, or log in. Use forge proof only when the matching CLI can prove the review is merged and its reviewed head equals the local tip. Otherwise accept only raw Git ancestry proving the entire tip is contained in the exact remote base.
-3. Observe the remote base without updating refs. If its object is missing, fetch only that exact ref with tags, pruning, maintenance, hooks, and configured ref mapping disabled. Never run a custom transport helper.
-4. Build a deterministic preview containing the target and base paths/branches/tips, merge proof, exact fast-forward, eligible root `.venv` and `target` deletions, worktree and local-branch removal, removable empty branch-path parents, retained container root, and retained remote branch. Explain that cache deletion is permanent and the repository must remain quiescent during apply.
-
-Ask for this exact reply:
-
-> To confirm, reply exactly: `Clean worktree <preview_id>`
-
-Only a direct reply from the current user, handled by the agent that produced the current preview, authorizes cleanup.
-
-## Apply
-
-Recompute the whole preview and stop on drift. Then, in order:
-
-1. Recheck the remote base and merge proof, then fast-forward only the selected tracking ref and clean primary base. First reject any incoming changed path equal to, above, or below any non-index entry—including an ignored path—under the filesystem's actual name equivalence.
-2. Revalidate and directly delete only previewed root `.venv` and `target` directories that are entirely ignored, untracked by Git, contained, and free of nested repositories or mounts. Do not move them to Trash or temporary storage.
-3. Remove the exact worktree without force. Delete the local branch through a prepared, no-deref `update-ref` transaction locked to the previewed tip; while locked, require the ref to remain direct and unattached. Never delete its remote branch.
-4. Remove only previewed, unchanged, empty branch-path parents with non-recursive `rmdir`; stop before the workspace container.
-
-Stop after the first failure. Report every completed irreversible action and the exact retained base, worktree, branch, cache, and parent-directory state. Never stash, reset, clean, prune metadata, switch branches, force-remove a worktree, or claim rollback.
+Never stash, reset, run `git clean`, force-remove a worktree, rewrite history, or push.

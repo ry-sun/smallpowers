@@ -1,7 +1,7 @@
 interface:
   display_name: "Cleanup Worktree"
   short_description: "Safely remove one merged local worktree"
-  default_prompt: "Use $cleanup-worktree to preview cleanup of the merged review worktree I name."
+  default_prompt: "Use $cleanup-worktree to remove this clean, integrated worktree and update the primary branch."
 
 policy:
   allow_implicit_invocation: false

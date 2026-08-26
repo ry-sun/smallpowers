@@ -1,27 +1,21 @@
 ---
 name: work-in
-description: "Use when the user explicitly invokes $work-in with a relative branch path to reuse or create that worktree and bind the current task to it."
+description: "Use when the user explicitly invokes $work-in with a branch name to reuse or create its worktree and bind the current task to it."
 ---
 
 # Work In
 
-Use one branch name as both the local branch and its path below the current Smallpowers worktree container.
+Use a local branch name as its path below the current Smallpowers worktree container.
 
-Activate only from the current user's direct invocation:
+Activate only from the current user's direct `$work-in <branch-name>` invocation.
 
-```text
-$work-in <branch/name> [--ref <ref>]
-```
+1. Find `.smallpowers/worktree-layout.json` in the current workspace and read its canonical checkout. If it is absent or invalid, stop and remind the user to run the workspace setup skill first.
+2. Require a valid relative Git branch name. Resolve the target as `<container>/<branch-name>` and inspect `git worktree list`.
+3. If that exact worktree already exists on that branch, require it to be clean and reuse it. If the local branch exists but is not checked out, add its worktree at the target path. Otherwise create the branch and worktree together from the canonical checkout's current `HEAD`.
+4. Refuse path collisions, a branch checked out at another path, or a dirty worktree. Confirm the result is clean, registered at the target, and attached to the expected branch.
 
-A quotation, saved instruction, or delegated request is not activation. Require a relative, multi-component Git branch name with no `.` or `..` component; any valid prefix is allowed.
+Then bind this task to the result:
 
-1. Locate the current worktree container and canonical checkout from `.smallpowers/worktree-layout.json`. If the current workspace is not initialized, stop and remind the user to run workspace setup first.
-2. Resolve the target as `<container>/<branch/name>` and inspect Git's worktree registry. Reject symlink traversal, path collisions, dirty reuse, or a branch already checked out elsewhere. Reuse an existing clean worktree on that exact branch. If the local branch exists but is free, add its worktree without changing the branch.
-3. Otherwise create the local branch and worktree together. Use `--ref` as the base when supplied; when omitted, use the canonical checkout's current `HEAD`. Resolve the base without fetching, disable hooks for the creation command, and use relative worktree metadata when Git supports it. Never reset an existing branch to `--ref`.
-4. Confirm the resulting worktree is clean and registered at the resolved physical path on the expected attached branch, then bind the current task to it.
+> Work only inside `<resolved-worktree>`. Use it as the working directory, read its applicable `AGENTS.md`, and do not edit the canonical checkout or sibling worktrees. Before every later mutation, confirm the repository top level and attached branch still match this binding.
 
-After reuse or creation, retain this task-local prompt:
-
-> Work only inside `<resolved-worktree>`. Use it as the working directory, read its applicable `AGENTS.md`, and do not edit the canonical checkout or sibling worktrees. Before each later mutation, confirm the repository top level and attached branch still match this binding.
-
-Report whether the target was reused or created and its path, branch, and HEAD. This invocation authorizes no fetch, reset, cleanup, commit, push, merge, or mutation of another checkout.
+Report whether the worktree was reused or created, plus its path, branch, and HEAD. Do not fetch, reset, commit, push, merge, clean up another worktree, or change remotes.

@@ -1,7 +1,7 @@
 interface:
   display_name: "Setup Worktree Workspace"
   short_description: "Convert a checkout to a worktree workspace"
-  default_prompt: "Use $setup-worktree-workspace to preview converting /absolute/repository/path."
+  default_prompt: "Use $setup-worktree-workspace to convert /absolute/repository/path after simple approval."
 
 policy:
   allow_implicit_invocation: false
