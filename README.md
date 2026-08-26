@@ -6,8 +6,6 @@
 
 Smallpowers is a compact, Codex-first collection of explicit development and Git-worktree workflows. A skill's full instructions are loaded only when you invoke that skill, keeping ordinary tasks free from an always-on process.
 
-Smallpowers is inspired by and draws heavily from [Superpowers](https://github.com/obra/superpowers) and [Ponytail](https://github.com/DietrichGebert/ponytail). Many of its workflow and code-quality practices were learned from and adapted from those projects. We are grateful to their authors and contributors for making that work available.
-
 ## Install
 
 ```bash
@@ -44,17 +42,13 @@ brainstorm -> specification -> approval -> dependency graph -> implementation
           -> integrated checks -> concise summary
 ```
 
-The specification is the user-facing contract. Its approval also records three independent choices:
+Specification approval records three choices:
 
 - whether to persist `spec.md` and `plan.md` under `docs/smallpowers/YYYY-MM-DD-<topic>/`;
 - whether behavior-changing work follows strict RED-GREEN-REFACTOR TDD;
 - whether to stop after planning or continue through implementation.
 
-The plan is an acyclic dependency graph, not just a task list. Serial nodes run inline; safe independent branches may run concurrently. Correctness and quality reviews are bounded and placed at meaningful convergence points rather than after every task.
-
-After the final summary, explicit feedback is routed by its uncertainty and dependency impact: simple clear changes are fixed directly, complex clear changes return to graph planning, and complex unclear changes return to focused brainstorming and specification approval.
-
-Detailed stage playbooks live under [`skills/smallpowers/references/`](skills/smallpowers/references/) and load only when their stage begins.
+The plan is an acyclic dependency graph: serial nodes run inline, while safe independent branches may run concurrently. After the final summary, explicit feedback is handled directly, replanned, or returned to specification according to its dependency impact and uncertainty. Detailed stage playbooks live under [`skills/smallpowers/references/`](skills/smallpowers/references/) and load only when needed.
 
 ## Worktree safety
 
@@ -74,6 +68,4 @@ The validators check the exact eight-skill catalog, explicit-only metadata, stri
 
 ## License and attribution
 
-Smallpowers is available under the MIT License. See [LICENSE](LICENSE).
-
-The upstream source revisions, adapted material, and applicable MIT notices for Superpowers and Ponytail are recorded in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+Smallpowers is available under the [MIT License](LICENSE). Upstream source revisions, adapted material, and applicable notices for Superpowers and Ponytail are recorded in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
