@@ -29,7 +29,7 @@ All Smallpowers skills are explicit-only: Codex may show their names and short d
 | `$simplify-docs [scope]` | Rewrites documentation around current usage and handoff knowledge. Omit the scope to inspect the whole repository. |
 | `$setup-worktree-workspace [repository-path]` | Converts an eligible regular checkout into a worktree-oriented workspace after a state-bound preview and confirmation. |
 | `$restore-regular-workspace <workspace-path>` | Restores a worktree workspace when only its canonical primary worktree remains. |
-| `$work-in <absolute-worktree-path> [--branch <branch>] [--from <ref>]` | Binds the current task to one worktree and optionally creates it from an exact base. |
+| `$work-in <branch/name> [--ref <ref>]` | Reuses or creates the branch-mirrored worktree and binds the current task to it; a new branch defaults to the canonical checkout's current `HEAD`. |
 | `$cleanup-worktree [absolute-worktree-path] [review]` | Verifies merge state, previews cleanup, removes the merged worktree and eligible local branch, and fast-forwards the base. |
 
 Smallpowers contains no global router, lifecycle hook, persistent mode, or skill-to-skill invocation.

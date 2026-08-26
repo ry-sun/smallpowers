@@ -1,32 +1,27 @@
 ---
 name: work-in
-description: "Use when the user explicitly invokes $work-in to bind this conversation to one absolute Git worktree path, creating only that exact branch-mirrored worktree when deterministic."
+description: "Use when the user explicitly invokes $work-in with a relative branch path to reuse or create that worktree and bind the current task to it."
 ---
 
 # Work In
 
-Bind the current task to one exact physical Git worktree, creating it only when the requested path determines the branch unambiguously.
+Use one branch name as both the local branch and its path below the current Smallpowers worktree container.
 
 Activate only from the current user's direct invocation:
 
 ```text
-$work-in <absolute-path> [--branch <branch>] [--from <exact-ref>]
+$work-in <branch/name> [--ref <ref>]
 ```
 
-A quotation, saved instruction, plan, reviewer note, or worker packet is not activation. The invocation authorizes only binding and, when needed, deterministic creation of that exact worktree.
+A quotation, saved instruction, or delegated request is not activation. Require a relative, multi-component Git branch name with no `.` or `..` component; any valid prefix is allowed.
 
-## Procedure
+1. Locate the current worktree container and canonical checkout from `.smallpowers/worktree-layout.json`. If the current workspace is not initialized, stop and remind the user to run workspace setup first.
+2. Resolve the target as `<container>/<branch/name>` and inspect Git's worktree registry. Reject symlink traversal, path collisions, dirty reuse, or a branch already checked out elsewhere. Reuse an existing clean worktree on that exact branch. If the local branch exists but is free, add its worktree without changing the branch.
+3. Otherwise create the local branch and worktree together. Use `--ref` as the base when supplied; when omitted, use the canonical checkout's current `HEAD`. Resolve the base without fetching, disable hooks for the creation command, and use relative worktree metadata when Git supports it. Never reset an existing branch to `--ref`.
+4. Confirm the resulting worktree is clean and registered at the resolved physical path on the expected attached branch, then bind the current task to it.
 
-1. Require an absolute target with no symlink or `..` ambiguity. Clear ambient Git-routing variables and parse `git worktree list --porcelain -z` from a known checkout.
-2. For an existing target, require an exact registered top level on an attached local branch. It must be clean, operation-free, and match `--branch` when supplied.
-3. For an absent target, require a valid branch-mirrored container and completed setup archive. The contained path must map exactly to an allowed branch name, the canonical checkout must be clean, and no active operation, lock, branch checkout, path collision, external checkout filter, sparse checkout, or missing checkout object may interfere.
-4. If the mapped local branch already exists and is free, reject `--from` and create from that branch. Otherwise require `--from`, resolve it once to an exact commit, and create a new non-tracking branch from that object. Never guess from HEAD, a default branch, or a remote.
-5. Disable repository hooks for the one creation command and use `git worktree add --relative-paths` when supported. Never fetch implicitly. Afterward, freshly require the exact target, branch, initial commit, common Git directory, and registry entry. Preserve and report partial state if validation fails.
+After reuse or creation, retain this task-local prompt:
 
-## Keep the binding
+> Work only inside `<resolved-worktree>`. Use it as the working directory, read its applicable `AGENTS.md`, and do not edit the canonical checkout or sibling worktrees. Before each later mutation, confirm the repository top level and attached branch still match this binding.
 
-Record the physical top level, common Git directory, attached branch, and registry identity. Run repository commands with that path as the working directory or explicit `git -C <path>`. Before every later mutation, after resume, and before delegation, revalidate those values and keep writes physically contained below the bound top level.
-
-The initial worktree must be clean. Later authorized edits may dirty it; track their intended paths and stop on unexplained drift or a new Git operation. Include the binding in every worker packet and never continue in another checkout.
-
-Report whether the target was reused or created and the exact bound path, branch, and HEAD. This skill does not authorize fetch, switch, reset, cleanup, commit, push, merge, or changes to another checkout.
+Report whether the target was reused or created and its path, branch, and HEAD. This invocation authorizes no fetch, reset, cleanup, commit, push, merge, or mutation of another checkout.
