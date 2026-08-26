@@ -9,7 +9,7 @@ Smallpowers is a compact, Codex-first collection of explicit development and Git
 ## Install
 
 ```bash
-codex plugin marketplace add git@github.com:ry-sun/smallpowers.git --ref main
+codex plugin marketplace add git@github.com:ry-sun/smallpowers.git --ref v0.2.0
 codex plugin add smallpowers@smallpowers
 ```
 
