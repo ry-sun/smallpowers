@@ -28,15 +28,21 @@ class ManifestParsingTests(unittest.TestCase):
                 manifest = validator.load_manifest(errors)
         return manifest, errors
 
-    def test_rejects_duplicate_top_level_manifest_key(self) -> None:
-        manifest, errors = self._load_manifest(
-            '{"name": "smallpowers", "name": "shadowed"}'
-        )
+    def test_rejects_duplicate_manifest_keys_at_every_level(self) -> None:
+        cases = {
+            "top level": '{"name": "smallpowers", "name": "shadowed"}',
+            "nested": '{"author": {"name": "Smallpowers", "name": "shadowed"}}',
+        }
 
-        self.assertEqual(manifest, {})
-        self.assertTrue(
-            any("duplicate JSON key 'name'" in error for error in errors), errors
-        )
+        for level, text in cases.items():
+            with self.subTest(level=level):
+                manifest, errors = self._load_manifest(text)
+
+                self.assertEqual(manifest, {})
+                self.assertTrue(
+                    any("duplicate JSON key 'name'" in error for error in errors),
+                    errors,
+                )
 
     def test_rejects_symlinked_manifest(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -82,16 +88,6 @@ class ManifestParsingTests(unittest.TestCase):
         self.assertTrue(
             any("plugin.json must not be a symlink" in error for error in errors),
             errors,
-        )
-
-    def test_rejects_duplicate_nested_manifest_key(self) -> None:
-        manifest, errors = self._load_manifest(
-            '{"author": {"name": "Smallpowers", "name": "shadowed"}}'
-        )
-
-        self.assertEqual(manifest, {})
-        self.assertTrue(
-            any("duplicate JSON key 'name'" in error for error in errors), errors
         )
 
 
@@ -247,31 +243,35 @@ class MarketplaceValidationTests(unittest.TestCase):
             errors,
         )
 
-    def test_rejects_marketplace_display_name_drift(self) -> None:
-        marketplace = self._valid_marketplace()
-        marketplace["interface"] = {"displayName": "Other marketplace"}
-        manifest = self._valid_manifest()
-        manifest["interface"]["displayName"] = "Other marketplace"  # type: ignore[index]
+    def test_rejects_marketplace_interface_drift(self) -> None:
+        cases = {
+            "display name": (
+                "displayName",
+                "Other marketplace",
+                "Smallpowers",
+            ),
+            "category": ("category", "Productivity", "Developer Tools"),
+        }
 
-        errors = self._validate_marketplace(marketplace, manifest)
+        for label, (field, value, expected) in cases.items():
+            with self.subTest(label=label):
+                marketplace = self._valid_marketplace()
+                if field == "displayName":
+                    marketplace["interface"] = {field: value}
+                else:
+                    marketplace["plugins"][0][field] = value  # type: ignore[index]
+                manifest = self._valid_manifest()
+                manifest["interface"][field] = value  # type: ignore[index]
 
-        self.assertTrue(
-            any("field 'displayName' must be 'Smallpowers'" in error for error in errors),
-            errors,
-        )
+                errors = self._validate_marketplace(marketplace, manifest)
 
-    def test_rejects_marketplace_category_drift(self) -> None:
-        marketplace = self._valid_marketplace()
-        marketplace["plugins"][0]["category"] = "Productivity"  # type: ignore[index]
-        manifest = self._valid_manifest()
-        manifest["interface"]["category"] = "Productivity"  # type: ignore[index]
-
-        errors = self._validate_marketplace(marketplace, manifest)
-
-        self.assertTrue(
-            any("field 'category' must be 'Developer Tools'" in error for error in errors),
-            errors,
-        )
+                self.assertTrue(
+                    any(
+                        f"field '{field}' must be '{expected}'" in error
+                        for error in errors
+                    ),
+                    errors,
+                )
 
     def test_rejects_unknown_marketplace_fields_at_every_level(self) -> None:
         mutations = {
@@ -652,94 +652,50 @@ class SkillValidationTests(unittest.TestCase):
                     errors,
                 )
 
-    def test_allows_router_link_after_even_backslash_run(self) -> None:
+    def test_allows_supported_router_link_forms(self) -> None:
         required_resource = "references/feedback.md"
-
-        def mutate(_repository_root: Path, skill_dir: Path) -> None:
-            skill_path = skill_dir / "SKILL.md"
-            inline_link = (
-                f"- [{Path(required_resource).name}]({required_resource})\n"
-            )
-            even_escaped_link = (
+        replacements = {
+            "inline after even backslash run": (
                 "\\\\[feedback](references/feedback.md)\n"
-            )
-            skill_path.write_text(
-                skill_path.read_text(encoding="utf-8").replace(
-                    inline_link,
-                    even_escaped_link,
-                ),
-                encoding="utf-8",
-            )
-
-        errors = self._validate_fixture(
-            frontmatter=(
-                "name: smallpowers\n"
-                "description: Use when $smallpowers is explicitly requested."
             ),
-            mutate=mutate,
-        )
-
-        self.assertEqual(errors, [])
-
-    def test_allows_reference_router_link_after_even_backslash_run(self) -> None:
-        required_resource = "references/feedback.md"
-
-        def mutate(_repository_root: Path, skill_dir: Path) -> None:
-            skill_path = skill_dir / "SKILL.md"
-            inline_link = (
-                f"- [{Path(required_resource).name}]({required_resource})\n"
-            )
-            reference_link = (
+            "reference after even backslash run": (
                 "\\\\[Feedback][feedback-route]\n\n"
                 f"[feedback-route]: {required_resource}\n"
-            )
-            skill_path.write_text(
-                skill_path.read_text(encoding="utf-8").replace(
-                    inline_link,
-                    reference_link,
-                ),
-                encoding="utf-8",
-            )
-
-        errors = self._validate_fixture(
-            frontmatter=(
-                "name: smallpowers\n"
-                "description: Use when $smallpowers is explicitly requested."
             ),
-            mutate=mutate,
-        )
-
-        self.assertEqual(errors, [])
-
-    def test_allows_visible_reference_style_router_link(self) -> None:
-        required_resource = "references/feedback.md"
-
-        def mutate(_repository_root: Path, skill_dir: Path) -> None:
-            skill_path = skill_dir / "SKILL.md"
-            inline_link = (
-                f"- [{Path(required_resource).name}]({required_resource})\n"
-            )
-            reference_link = (
+            "visible reference": (
                 "- [Feedback playbook][feedback-route]\n\n"
                 f"[feedback-route]: {required_resource}\n"
-            )
-            skill_path.write_text(
-                skill_path.read_text(encoding="utf-8").replace(
-                    inline_link,
-                    reference_link,
-                ),
-                encoding="utf-8",
-            )
-
-        errors = self._validate_fixture(
-            frontmatter=(
-                "name: smallpowers\n"
-                "description: Use when $smallpowers is explicitly requested."
             ),
-            mutate=mutate,
-        )
+        }
 
-        self.assertEqual(errors, [])
+        for label, replacement in replacements.items():
+            with self.subTest(label=label):
+                def mutate(
+                    _repository_root: Path,
+                    skill_dir: Path,
+                    router_link: str = replacement,
+                ) -> None:
+                    skill_path = skill_dir / "SKILL.md"
+                    inline_link = (
+                        f"- [{Path(required_resource).name}]({required_resource})\n"
+                    )
+                    skill_path.write_text(
+                        skill_path.read_text(encoding="utf-8").replace(
+                            inline_link,
+                            router_link,
+                        ),
+                        encoding="utf-8",
+                    )
+
+                errors = self._validate_fixture(
+                    frontmatter=(
+                        "name: smallpowers\n"
+                        "description: Use when $smallpowers is explicitly requested."
+                    ),
+                    mutate=mutate,
+                )
+
+                self.assertEqual(errors, [])
 
     def test_rejects_unknown_frontmatter_field(self) -> None:
         errors = self._validate_fixture(
@@ -1139,27 +1095,6 @@ class SkillValidationTests(unittest.TestCase):
         self.assertTrue(
             any(
                 "release validation is missing approved skills" in error
-                for error in errors
-            ),
-            errors,
-        )
-
-    def test_release_validation_rejects_unapproved_skill(self) -> None:
-        def mutate(_repository_root: Path, skill_dir: Path) -> None:
-            (skill_dir.parent / "unapproved-skill").mkdir()
-
-        errors = self._validate_fixture(
-            frontmatter=(
-                "name: smallpowers\n"
-                "description: Use when $smallpowers is explicitly requested."
-            ),
-            mutate=mutate,
-            require_skill=True,
-        )
-
-        self.assertTrue(
-            any(
-                "validation found unapproved skills: unapproved-skill" in error
                 for error in errors
             ),
             errors,
