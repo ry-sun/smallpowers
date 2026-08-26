@@ -21,7 +21,7 @@ Decompose independently releasable subsystems before designing the first one. Fo
 1. State the user-visible outcome and explicit non-goals.
 2. Identify the decisions that could change behavior, scope, data, public interfaces, dependencies, security, compatibility, migration, external effects, or acceptance.
 3. Ask one focused question per user turn, only for a decision the evidence cannot resolve. Prefer concrete alternatives and explain the consequence of each.
-4. Whenever pausing, provide a reply form that begins with `$smallpowers`; activation does not carry into the reply.
+4. Whenever pausing, state the pending decision and the context needed to answer it.
 5. When a real choice exists, compare two or three viable approaches, lead with a recommendation, and name the deciding tradeoffs. Do not invent alternatives for a routine implementation detail.
 6. Apply YAGNI: exclude speculative extension points, future modes, and unrelated cleanup. Preserve repository conventions unless the approved outcome requires changing them.
 

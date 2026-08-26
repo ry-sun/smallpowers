@@ -1,6 +1,6 @@
 ---
 name: setup-worktree-workspace
-description: "Use when the user explicitly invokes $setup-worktree-workspace to move one regular Git checkout into a simple worktree workspace after plain approval."
+description: "Use when the user explicitly invokes $setup-worktree-workspace to move one regular Git checkout into a simple worktree workspace after confirmation."
 ---
 
 # Setup Worktree Workspace
@@ -17,9 +17,9 @@ Activate only from the current user's direct `$setup-worktree-workspace [reposit
    - `<repository-name>/`, the canonical checkout;
    - `AGENTS.md`, concise instructions to work only in the user-assigned worktree and not edit sibling worktrees;
    - `.smallpowers/worktree-layout.json`, with `schema_version: 1`, `layout: "branch-mirrored"`, and the relative `canonical_checkout` name.
-4. Show the exact source, container, and canonical checkout paths. Ask the user to reply with only `approve`.
+4. Show the exact source, container, and canonical checkout paths. Ask the user to confirm the move.
 
-Only a direct `approve` reply to this pending explanation authorizes the move.
+Only clear approval of this pending explanation authorizes the move. If the response is ambiguous or changes the proposed move, clarify before proceeding.
 
 ## Apply after approval
 

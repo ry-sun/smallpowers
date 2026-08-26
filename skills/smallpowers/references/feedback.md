@@ -4,17 +4,11 @@ Route requested changes after a completed `## Concise Summary` without replaying
 
 ## Activation and context
 
-The canonical entry is:
+Accept direct requested changes after a completed summary. The plan path may be omitted only when exactly one accessible completed run can be identified. Otherwise ask for it. Before appending a record or changing an artifact, perform [resume reconciliation](resume.md). Require a verified completed graph, its exact bound approved specification, current repository instructions and state, and current evidence. Contract-material drift returns to specification revision before feedback work. When more than one run or feedback cycle could apply, ask the user to identify the intended one.
 
-```text
-$smallpowers feedback <absolute-plan-path> -- <requested changes>
-```
+Read the entire request before routing. Split it into atomic outcomes, inspect the actual implementation and contract, and classify each item as requested, already satisfied, factually incorrect, obsolete, contradictory, or outside current authority. Consolidate all adopted items into one feedback cycle and one next specification identity. Use the highest route any adopted item requires; later graph planning may branch independent work. Do not fork competing specification or graph histories for items from one request.
 
-The plan path may be omitted only when exactly one accessible completed run can be identified. Otherwise ask for it. Before appending a record or changing an artifact, perform [resume reconciliation](resume.md). Require a verified completed graph, its exact bound approved specification, current repository instructions and state, and current evidence. Contract-material drift returns to specification revision before feedback work. Each later user answer must again begin with `$smallpowers` and identify the plan path or feedback cycle when more than one run could apply.
-
-Read the entire request before routing. Split it into atomic outcomes, inspect the actual implementation and contract, and classify each item as requested, already satisfied, factually incorrect, obsolete, contradictory, or outside current authority. Consolidate all adopted items into one feedback cycle and one next specification identity. Use the highest route any adopted item requires; later graph planning may branch independent work. Do not fork competing specification or graph histories for items from one invocation.
-
-Treat a direct, imperative feedback request from the user as approval of an amendment only when its meaning and acceptance are clear. A pasted third-party review, question, suggestion, or tentative preference is evidence to evaluate, not automatic approval. If an item is neither an existing contract obligation nor affirmatively adopted, report the assessment, leave code and contract unchanged, enter `awaiting adoption`, and provide a bare reply form beginning `$smallpowers feedback <absolute-plan-path> -- adopt ...`.
+Treat a direct, imperative feedback request from the user as approval of an amendment only when its meaning and acceptance are clear. A pasted third-party review, question, suggestion, or tentative preference is evidence to evaluate, not automatic approval. If an item is neither an existing contract obligation nor affirmatively adopted, report the assessment, leave code and contract unchanged, enter `awaiting adoption`, and ask whether the user wants to adopt it.
 
 After reconciliation, append an intake record. Finalize it only after route selection and contract normalization:
 
@@ -31,9 +25,9 @@ Feedback cycle <stable ID>
 - authority or unresolved decision: <record>
 ```
 
-Preserve artifact lifetime and testing mode unless this explicit feedback invocation changes one. An artifact change does not delete prior persisted history. A testing-mode change applies only to new or invalidated nodes in this feedback graph; prior nodes keep their truthful historical mode and evidence. A request for a retroactive strict-TDD claim requires explicit reimplementation planning and can never relabel code that was not test-first. Record all choice changes; do not infer them from request size.
+Preserve artifact lifetime and testing mode unless the feedback request changes one. An artifact change does not delete prior persisted history. A testing-mode change applies only to new or invalidated nodes in this feedback graph; prior nodes keep their truthful historical mode and evidence. A request for a retroactive strict-TDD claim requires explicit reimplementation planning and can never relabel code that was not test-first. Record all choice changes; do not infer them from request size.
 
-Determine the cycle's highest route before normalizing its contract. If any adopted item requires brainstorming, leave the entire `specification after` pending and create no partial approved revision. After the unresolved decisions are settled, [specification.md](specification.md) creates one unapproved draft covering the consolidated adopted delta for the ordinary gate. Otherwise, a correction already required by the approved contract leaves its body, revision, and hash unchanged; consolidate every clear new behavior into one edited contract body, increment the revision once, recompute its hash without approval metadata, and append an approval record naming this exact direct feedback invocation plus the current artifact and testing choices. The clear feedback invocation is the approval, so there is no duplicate gate.
+Determine the cycle's highest route before normalizing its contract. If any adopted item requires brainstorming, leave the entire `specification after` pending and create no partial approved revision. After the unresolved decisions are settled, [specification.md](specification.md) creates one unapproved draft covering the consolidated adopted delta for the ordinary gate. Otherwise, a correction already required by the approved contract leaves its body, revision, and hash unchanged; consolidate every clear new behavior into one edited contract body, increment the revision once, recompute its hash without approval metadata, and append an approval record naming the direct feedback request plus the current artifact and testing choices. A clear feedback request is the approval, so there is no duplicate gate.
 
 ## Choose the route
 
@@ -74,10 +68,10 @@ The durable state transition is:
 ```text
 complete -> resume reconciliation -> feedback triage
 feedback triage -> awaiting adoption | direct graph | planning | awaiting specification approval
-awaiting adoption -> explicit adoption invocation -> feedback triage
+awaiting adoption -> clear adoption -> feedback triage
 direct graph -> execution -> affected cleanup -> bounded reviews -> fresh checks -> complete
 planning -> execution -> affected cleanup -> bounded reviews -> fresh checks -> complete
-awaiting specification approval -> explicit approval -> planning -> execution
+awaiting specification approval -> clear approval -> planning -> execution
 ```
 
-End every completed feedback cycle with a new `## Concise Summary` and the canonical feedback command containing the absolute plan path.
+End every completed feedback cycle with a new `## Concise Summary` that retains the absolute plan path for later context.

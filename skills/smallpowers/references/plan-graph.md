@@ -86,8 +86,6 @@ Repair the plan until all of these are true:
 
 If planning reveals a material contract choice, revise the specification and return to its single approval gate. Otherwise persist or retain the plan according to the approved artifact choice and proceed automatically.
 
-`Plan only` leaves execution nodes pending. End that stage with a short `## Plan Handoff` containing the approved specification path and revision/hash, absolute plan path, graph revision and structural hash, artifact lifetime, default testing mode, stop condition, unresolved blockers or `none`, and this bare continuation form:
-
-`$smallpowers implement <absolute-plan-path>`
+`Plan only` leaves execution nodes pending. End that stage with a short `## Plan Handoff` containing the approved specification path and revision/hash, absolute plan path, graph revision and structural hash, artifact lifetime, default testing mode, stop condition, unresolved blockers or `none`, and state that implementation can be requested later using that plan.
 
 A later explicit implement request changes only the stop condition, preserves persistence and testing choices, records the change, performs [resume reconciliation](resume.md), and then schedules the same graph. Complex but clear post-completion feedback records the approved amendment and produces a new self-reviewed graph revision; complex unclear feedback returns to brainstorming instead.

@@ -1,6 +1,6 @@
 # Meaningful testing
 
-The initial approval selects `standard` or `strict TDD` for the feature. Preserve it in every graph revision and worker packet unless a later explicit feedback invocation changes the mode for its new or invalidated nodes. Never relabel historical evidence or claim retroactive test-first development. Testing proves observable behavior; it is not a quota of cases, files, or assertions.
+The initial approval selects `standard` or `strict TDD` for the feature. Preserve it in every graph revision and worker packet unless a later feedback request changes the mode for its new or invalidated nodes. Never relabel historical evidence or claim retroactive test-first development. Testing proves observable behavior; it is not a quota of cases, files, or assertions.
 
 ## Standard mode
 
