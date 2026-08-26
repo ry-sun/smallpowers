@@ -1,6 +1,6 @@
 {
   "name": "smallpowers",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Explicit-only Codex workflows for feature development, repository simplification, and safe Git-worktree workspace operations.",
   "author": {
     "name": "Ryan Sun"
