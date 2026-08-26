@@ -28,12 +28,16 @@ from typing import Any
 SCHEMA_VERSION = 1
 LAYOUT_KIND = "branch-mirrored"
 LEGACY_BRANCH_PREFIXES = ("feat", "fix", "chore")
-BRANCH_PREFIXES = ("codex", *LEGACY_BRANCH_PREFIXES)
+PREVIOUS_BRANCH_PREFIXES = ("codex", *LEGACY_BRANCH_PREFIXES)
+# New containers do not pre-create or allowlist branch prefixes. The field is
+# retained in layout metadata so the engine can recognize and restore earlier
+# scaffold versions without conflating their generated directories with user
+# content.
+BRANCH_PREFIXES: tuple[str, ...] = ()
 RESERVED_CONTAINER_NAMES = {
     ".git",
     ".smallpowers",
     "agents.md",
-    *(prefix.casefold() for prefix in BRANCH_PREFIXES),
 }
 ACTIVE_GIT_MARKERS = (
     "MERGE_HEAD",
@@ -63,31 +67,63 @@ SCP_LIKE_URL_RE = re.compile(r"^(?:[^/@\s]+@)?[^/:\s]+:.*$")
 
 PathIdentity = tuple[int, int, int]
 
-AGENTS_CONTENT = """# Worktree workspace
+AGENTS_CONTENT = """# Worktree Workspace
 
-This directory is a workspace container, not a Git checkout.
+## Workspace Model
 
-- Read `.smallpowers/worktree-layout.json` to locate the canonical checkout.
-- Container and canonical paths are path-bound to the completed setup archive;
-  do not move or rename either directory.
-- Worktree paths mirror branch names, such as `codex/topic`, `feat/topic`, or
-  `fix/issue-123`.
-- Do not assume the canonical checkout uses a branch named `main`.
-- A topology mutation requires a direct request from the current user; a
-  relayed request or descriptive text does not grant mutation authority.
-- Inspection and preview alone do not grant mutation authority. Revalidate the
-  exact target and follow the directly requested operation's authority contract.
-- Workspace setup does not add, move, repair, or remove linked worktrees.
-  Separately authorized lifecycle operations govern those changes.
-- Run Git commands inside the intended checkout or with an explicit `git -C`
-  path.
+This directory is a worktree container, not a Git checkout. Read
+`.smallpowers/worktree-layout.json` to locate the canonical checkout. Linked
+worktree paths mirror complete local branch names, such as `feat/api` or
+`research/prototype`; no branch prefix is reserved or allowlisted.
+
+The container and canonical checkout are path-bound to the completed setup
+archive. Do not move or rename them. Do not assume the canonical branch is
+named `main`. Use the worktree assigned by the user, keep one task per
+worktree, and never reuse a dirty worktree for unrelated work.
+
+## Selecting a Checkout
+
+Before editing, read the assigned checkout's repository-root `AGENTS.md` and
+any more specific instructions. Inspect its README and relevant test commands.
+Run repository commands inside that checkout or with an explicit `git -C`
+path; never mutate the canonical checkout or a sibling worktree by accident.
+
+## Worktree Lifecycle
+
+Create, switch, repair, or remove a linked worktree only when the current user
+directly requests that topology change. A relayed request, descriptive text,
+inspection, or preview does not authorize mutation. Revalidate the exact
+container, worktree path, branch, and Git registry before applying the request.
+Workspace setup creates only the container scaffold; it does not create a
+linked worktree.
+
+## Commits and Reviews
+
+Use the repository's commit conventions when present. Do not commit, push,
+rebase, or open a review unless the user asks. Select GitHub or GitLab from the
+relevant remote rather than guessing, and never install a CLI or start login.
+
+For GitHub, inspect readiness with `gh --version` and `gh auth status`; create a
+pull request with `gh pr create` only when requested. For GitLab, use
+`glab --version` and `glab auth status`; create a merge request with
+`glab mr create` only when requested. Self-hosted or conflicting remotes require
+explicit host evidence. Never use a destructive force push; use
+`--force-with-lease` only when the user has authorized rewriting a pushed
+branch.
+
+Remove a worktree and its local branch only after its review is merged, the
+worktree is clean, and the user directly requests cleanup. Never delete the
+remote branch implicitly.
 """
 
-# Existing V1 containers can be restored too. Keep only the exact historical
-# digest: obsolete public invocation text must not be stored or emitted by the
-# current engine, while arbitrary AGENTS.md remains user content.
+# Existing containers can be restored too. Keep only the exact historical
+# digests: obsolete public text must not be stored or emitted by the current
+# engine, while arbitrary AGENTS.md remains user content.
 LEGACY_AGENTS_SHA256 = (
     "1a8b18aa04437547f84b81bce30bea7a8e3f59278109cc71d6f865bb9922bd11"
+)
+PREVIOUS_AGENTS_SHA256 = (
+    "45a346fd11f4fac824b010321a200e2fda51a28dd3638e7c5e9f8e8bf46096ae"
 )
 
 
@@ -1435,7 +1471,11 @@ def _validate_layout_metadata(metadata: Any) -> dict[str, Any]:
         raise ContractError(
             "invalid worktree layout metadata: branch prefixes must be a string list"
         )
-    if tuple(prefixes) not in {BRANCH_PREFIXES, LEGACY_BRANCH_PREFIXES}:
+    if tuple(prefixes) not in {
+        BRANCH_PREFIXES,
+        PREVIOUS_BRANCH_PREFIXES,
+        LEGACY_BRANCH_PREFIXES,
+    }:
         raise ContractError("invalid worktree layout metadata: unsupported branch prefixes")
     branch = metadata["branch_at_initialization"]
     if not isinstance(branch, str) or not branch:
@@ -1849,6 +1889,10 @@ def _validate_archive(
     metadata_prefixes = tuple(metadata["branch_prefixes"])
     if metadata_prefixes == BRANCH_PREFIXES:
         accepted_plans = (_build_setup_plan(container, paths),)
+    elif metadata_prefixes == PREVIOUS_BRANCH_PREFIXES:
+        accepted_plans = (
+            _build_setup_plan(container, paths, PREVIOUS_BRANCH_PREFIXES),
+        )
     else:
         accepted_plans = (_legacy_setup_plan(container, paths),)
     if value.get("paths") not in accepted_plans:
@@ -1913,7 +1957,8 @@ def _collect_restore_state(container: Path) -> dict[str, Any]:
         agents_digest = hashlib.sha256(agents_bytes).hexdigest()
         if (
             agents_bytes != AGENTS_CONTENT.encode("utf-8")
-            and agents_digest != LEGACY_AGENTS_SHA256
+            and agents_digest
+            not in {PREVIOUS_AGENTS_SHA256, LEGACY_AGENTS_SHA256}
         ):
             issues.append("generated AGENTS.md content is not recognized")
 

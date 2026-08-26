@@ -1,6 +1,6 @@
 ---
 name: setup-worktree-workspace
-description: "Use when the user explicitly invokes $setup-worktree-workspace to convert one conventional Git checkout into a branch-mirrored worktree workspace."
+description: "Use when the user explicitly invokes $setup-worktree-workspace to convert one conventional Git checkout into an unrestricted branch-mirrored worktree workspace."
 ---
 
 # Setup Worktree Workspace
@@ -22,6 +22,8 @@ python3 <skill-directory>/../../scripts/worktree_workspace.py setup-preview --re
 ```
 
 Proceed only when the engine returns `ok: true`. Show the exact source, container, canonical checkout, branch, HEAD, planned operations, and `preview_id`. Explain any rejected relocation-sensitive Git configuration rather than rewriting it.
+
+The generated container keeps `.smallpowers` metadata and a detailed `AGENTS.md`, but creates no default branch-prefix directories and imposes no prefix allowlist. The instructions cover both `gh` and `glab`; forge inventory remains informational and never starts authentication.
 
 Ask for this exact reply:
 

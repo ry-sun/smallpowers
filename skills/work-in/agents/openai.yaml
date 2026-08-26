@@ -1,7 +1,7 @@
 interface:
   display_name: "Work In"
-  short_description: "Bind work to one exact Git worktree"
-  default_prompt: "Use $work-in with an absolute path to bind this conversation to that Git worktree."
+  short_description: "Reuse or create a branch worktree"
+  default_prompt: "Use $work-in with a relative branch path and optional --ref to reuse or create that worktree and bind this task to it."
 
 policy:
   allow_implicit_invocation: false
