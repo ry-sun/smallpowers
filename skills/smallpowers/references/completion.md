@@ -1,6 +1,6 @@
 # Evidence-based completion
 
-Enter successful completion only after implementation, applicable feature cleanup, both terminal reviews, and all accepted remediation describe the current repository state. Also load this reference for a terminal blocked handoff when missing authority, an unresolved contract decision, or a required check or review prevents further in-scope progress. Successful completion is an evidence gate; a blocked handoff reports what is not complete and the exact explicit continuation.
+Enter successful completion only after implementation, applicable feature cleanup, both terminal reviews, and all accepted remediation describe the current repository state. Also load this reference for a terminal blocked handoff when missing authority, an unresolved contract decision, or a required check or review prevents further in-scope progress. Successful completion is an evidence gate; a blocked handoff reports what is not complete and what is needed to continue.
 
 ## Refresh the evidence
 
@@ -46,12 +46,6 @@ Use this exact heading and field order. Keep each field short but concrete; writ
 
 Do not add a turn diary, praise, or unsupported claims. The summary must stand alone even when earlier progress messages are hidden.
 
-For a completed graph, end the response with this command form on its own line, replacing the placeholder with the completed plan's absolute path:
+For a completed graph, retain the completed plan's absolute path in the summary when one exists so later feedback can be matched to the run. If the artifact policy intentionally provides no path, later feedback may omit it only when exactly one completed run remains accessible to the controller.
 
-`$smallpowers feedback <absolute-plan-path> -- <requested changes>`
-
-If the artifact policy intentionally provides no path, use the pathless form only when exactly one completed run remains accessible to the controller:
-
-`$smallpowers feedback -- <requested changes>`
-
-For a blocked graph, do not emit a feedback command. End with one bare reply form for the actual blocker: use `$smallpowers approved ...` when an unapproved specification is waiting, or `$smallpowers resume <absolute-plan-path> -- <answer, resolved prerequisite, or explicit authority>` when an existing graph can continue. The command must begin with `$smallpowers` and must not imply that a blocked graph is complete.
+For a blocked graph, end with the actual blocker, the decision or authority needed, and the applicable specification or plan context. Do not imply that a blocked graph is complete.

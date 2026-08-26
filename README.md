@@ -25,8 +25,8 @@ All Smallpowers skills are explicit-only: Codex may show their names and short d
 | `$smallpowers-audit` | Reports removable complexity across a repository without changing files. |
 | `$simplify-test-cases [scope]` | Removes redundant or trivial tests while preserving meaningful coverage. Omit the scope to inspect the whole repository. |
 | `$simplify-docs [scope]` | Rewrites documentation around current usage and handoff knowledge. Omit the scope to inspect the whole repository. |
-| `$setup-worktree-workspace [repository-path]` | Moves a regular checkout into a simple worktree container after a plain `approve`. |
-| `$restore-regular-workspace [workspace-path]` | Moves the sole canonical checkout back out after a plain `approve`. |
+| `$setup-worktree-workspace [repository-path]` | Moves a regular checkout into a simple worktree container after confirmation. |
+| `$restore-regular-workspace [workspace-path]` | Moves the sole canonical checkout back out after confirmation. |
 | `$work-in <branch-name>` | Reuses or creates the branch-mirrored worktree and binds the current task to it. |
 | `$cleanup-worktree [worktree-path]` | Updates the primary branch, verifies merge/squash/rebase integration, and removes the clean local worktree and branch. |
 
@@ -48,11 +48,11 @@ Specification approval records three choices:
 - whether behavior-changing work follows strict RED-GREEN-REFACTOR TDD;
 - whether to stop after planning or continue through implementation.
 
-The plan is an acyclic dependency graph: serial nodes run inline, while safe independent branches may run concurrently. After the final summary, explicit feedback is handled directly, replanned, or returned to specification according to its dependency impact and uncertainty. Detailed stage playbooks live under [`skills/smallpowers/references/`](skills/smallpowers/references/) and load only when needed.
+The plan is an acyclic dependency graph: serial nodes run inline, while safe independent branches may run concurrently. After the final summary, direct feedback in the same task is handled directly, replanned, or returned to specification according to its dependency impact and uncertainty. Detailed stage playbooks live under [`skills/smallpowers/references/`](skills/smallpowers/references/) and load only when needed.
 
 ## Worktree safety
 
-The four worktree skills are independent, self-contained entrypoints built from ordinary Git and shell commands. Setup and restore explain the exact move and wait for a simple approval. Work-in maintains a task-scoped path and branch contract. Cleanup accepts ordinary merges plus squash and rebase integration, directly deletes verified generated directories to speed removal, and fast-forward-pulls the primary branch. The workflows do not push or delete remote branches.
+The four worktree skills are independent, self-contained entrypoints built from ordinary Git and shell commands. Setup and restore explain the exact move and wait for clear confirmation. Work-in maintains a task-scoped path and branch contract. Cleanup accepts ordinary merges plus squash and rebase integration, directly deletes verified generated directories to speed removal, and fast-forward-pulls the primary branch. The workflows do not push or delete remote branches.
 
 ## Development
 

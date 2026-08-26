@@ -1,7 +1,7 @@
 interface:
   display_name: "Restore Regular Workspace"
   short_description: "Restore one checkout to a regular workspace"
-  default_prompt: "Use $restore-regular-workspace to restore /absolute/container/path after simple approval."
+  default_prompt: "Use $restore-regular-workspace to restore /absolute/container/path after confirmation."
 
 policy:
   allow_implicit_invocation: false

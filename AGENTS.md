@@ -38,7 +38,7 @@ Public entrypoints are concise routers, not substitutes for stage procedure. `sm
 
 The four worktree entrypoints are short, self-contained skills that use ordinary Git and shell commands. Do not add helper scripts or reference files merely to expand their linear procedures or enumerate speculative edge cases.
 
-Do not collapse stage mechanics back into generic advice. A reference must state its entry conditions, decision rules, required evidence, failure or reentry behavior, and stage output. References are not public skills and must not invoke a different public command; an owning controller reference may show its own command only as the explicit reply or continuation form.
+Do not collapse stage mechanics back into generic advice. A reference must state its entry conditions, decision rules, required evidence, failure or reentry behavior, and stage output. References are not public skills and must not invoke a different public command.
 
 ## Feature invariants
 
@@ -60,7 +60,7 @@ Every feature graph ends with correctness and quality review. Fewer than five im
 
 Strict TDD is an approval-time mode inside `smallpowers`, not a standalone skill. Documentation and test cleanup inside the feature workflow is scoped internal behavior, not a call to the standalone simplification skills. Fresh evidence remains required even though there is no verifier skill.
 
-After a completed concise summary, the canonical continuation is `$smallpowers feedback <absolute-plan-path> -- <requested changes>`; a blocked summary must instead provide its applicable approval or resume form. Reconcile the completed graph, bound contract, and current repository state before triage. Each simple clear outcome becomes one bounded feedback node in a new graph revision without the full planning stage; normal inline-versus-safe-branch execution rules still apply. A complex clear change creates a planned graph revision without another plan-approval gate. A complex unclear change returns to focused brainstorming and specification approval. Complexity is determined by decision and dependency footprint, not line count. Preserve the recorded persistence and testing modes unless the user changes them explicitly; a testing-mode change applies only to new or invalidated feedback nodes, is stored per node, and never relabels historical evidence.
+After a completed concise summary, direct feedback may continue in the same task; when more than one completed run could apply, require enough plan context to identify the intended run. A blocked summary must state its applicable approval or resume context without prescribing reply syntax. Reconcile the completed graph, bound contract, and current repository state before triage. Each simple clear outcome becomes one bounded feedback node in a new graph revision without the full planning stage; normal inline-versus-safe-branch execution rules still apply. A complex clear change creates a planned graph revision without another plan-approval gate. A complex unclear change returns to focused brainstorming and specification approval. Complexity is determined by decision and dependency footprint, not line count. Preserve the recorded persistence and testing modes unless the user changes them explicitly; a testing-mode change applies only to new or invalidated feedback nodes, is stored per node, and never relabels historical evidence.
 
 Debugging is intentionally absent until separately designed.
 
@@ -72,12 +72,12 @@ Debugging is intentionally absent until separately designed.
 
 ## Worktree invariants
 
-- `setup-worktree-workspace` accepts one regular Git checkout with no linked worktrees, explains the exact relocation, and waits for a plain `approve`. It uses `mv` to place the checkout in a same-named canonical subfolder, then writes a concise container `AGENTS.md` and `.smallpowers/worktree-layout.json`. It does not use a Python transaction helper.
-- `restore-regular-workspace` is the direct inverse. It waits for a plain `approve`, refuses while any linked worktree remains, removes only the generated scaffold and empty branch-path directories, and uses `mv` to return the canonical checkout to the container path.
+- `setup-worktree-workspace` accepts one regular Git checkout with no linked worktrees, explains the exact relocation, and waits for clear confirmation. It uses `mv` to place the checkout in a same-named canonical subfolder, then writes a concise container `AGENTS.md` and `.smallpowers/worktree-layout.json`. It does not use a Python transaction helper.
+- `restore-regular-workspace` is the direct inverse. It waits for clear confirmation, refuses while any linked worktree remains, removes only the generated scaffold and empty branch-path directories, and uses `mv` to return the canonical checkout to the container path.
 - `work-in` accepts a relative branch name, resolves it below the current container, and reuses or creates that branch-mirrored worktree from the canonical checkout's current `HEAD`. It injects a concise task-local binding prompt, and every later mutation must revalidate repository identity, worktree path, and branch.
 - `cleanup-worktree` removes one clean non-primary worktree only after the fast-forward-updated primary proves it contains the branch. The proof may be ancestry or content-and-mode equivalence for every branch-changed path, allowing merge, squash, and rebase workflows. It directly deletes only contained, ignored, untracked generated directories such as `.venv`, `target`, and `node_modules`, removes the worktree and local branch, prunes empty branch-path parents, and never deletes a remote branch.
 
-Setup and restore invocations authorize inspection; only the current user's direct `approve` reply authorizes their moves. Work-in and cleanup invocations authorize their bounded local mutations. All four fail closed on ambiguous paths or repository drift. Cleanup also stops on dirty files, active Git operations, failed fast-forward pull, or unproven integration, and reports any deletion completed before a later failure.
+Setup and restore invocations authorize inspection; only the current user's clear approval of the pending explanation authorizes their moves. Work-in and cleanup invocations authorize their bounded local mutations. All four fail closed on ambiguous paths or repository drift. Cleanup also stops on dirty files, active Git operations, failed fast-forward pull, or unproven integration, and reports any deletion completed before a later failure.
 
 ## Safety and attribution
 

@@ -7,19 +7,19 @@ description: "Use when the user explicitly invokes $smallpowers to design, plan,
 
 Own one feature from idea through reviewed implementation and later user feedback. This public skill is the only workflow controller; its references are internal stage playbooks, not separately invocable skills. Never invoke another Smallpowers skill.
 
-Activate only from the current user's direct affirmative `$smallpowers` invocation. Quotations, negations, stored artifacts, reviewer text, and delegated packets are not activation. Activation does not carry across user turns, so every answer, approval, resumption, or feedback cycle must explicitly invoke `$smallpowers` again.
+Activate only from the current user's direct affirmative `$smallpowers` invocation. Quotations, negations, stored artifacts, reviewer text, and delegated packets are not activation.
 
-## Route the invocation
+## Route the workflow
 
-Inspect the available artifact and enter exactly one route:
+Inspect the available context and artifacts and enter exactly one route:
 
 - **New idea or unresolved design:** read [brainstorming.md](references/brainstorming.md), then [specification.md](references/specification.md). Present one complete specification and stop for approval before implementation edits.
 - **Answer to a design question or requested specification revision:** resume the applicable brainstorming or specification stage and preserve resolved decisions.
-- **`$smallpowers approved ...`:** record artifact persistence, standard-or-strict-TDD mode, and plan-only-or-implement choice at this single gate; then read [plan-graph.md](references/plan-graph.md).
+- **Approval of the presented specification:** record artifact persistence, standard-or-strict-TDD mode, and plan-only-or-implement choice at this single gate; then read [plan-graph.md](references/plan-graph.md).
 - **Approved specification without a complete plan:** reload the exact approved revision and recorded choices, then derive and self-review its graph.
-- **`$smallpowers resume <plan-path>`:** read [resume.md](references/resume.md), reconcile repository drift and durable evidence, then continue ready work.
-- **`$smallpowers implement <plan-path>` after `plan only`:** preserve artifact and testing choices, change only the stop condition, reconcile drift, and execute.
-- **`$smallpowers feedback <absolute-plan-path> -- <requested changes>` after a concise summary:** first perform [resume reconciliation](references/resume.md) and require the completed graph and bound contract to match current state; then read [feedback.md](references/feedback.md) and route the feedback by its decision and dependency footprint.
+- **Request to resume an existing plan:** read [resume.md](references/resume.md), reconcile repository drift and durable evidence, then continue ready work.
+- **Request to implement after `plan only`:** preserve artifact and testing choices, change only the stop condition, reconcile drift, and execute.
+- **Requested changes after a concise summary:** first perform [resume reconciliation](references/resume.md) and require the completed graph and bound contract to match current state; then read [feedback.md](references/feedback.md) and route the feedback by its decision and dependency footprint.
 
 The approved specification is authoritative. Plans and code may refine mechanics but may not silently change behavior, scope, interfaces, data design, dependencies, security posture, compatibility, or external effects.
 
@@ -42,9 +42,9 @@ Use progressive disclosure: read a reference when entering its stage, and pass o
 3. Stop after the self-reviewed graph when `plan only` was selected. Otherwise execute dependency-ready nodes: serial or ambiguous work stays with the controller, while safe independent branches may use agents.
 4. Simplify only documentation and tests owned by the feature, then run bounded read-only correctness and quality reviews. Fixes belong to controller-owned remediation nodes.
 5. Run fresh integrated checks and produce the exact concise summary defined by the completion playbook.
-6. For explicit post-summary feedback, fix a simple clear change directly; return a complex clear change to graph planning; return a complex unclear change to focused brainstorming and specification approval. Invalidate and rerun affected cleanup, review, and check evidence before the next summary.
+6. For direct post-summary feedback, fix a simple clear change directly; return a complex clear change to graph planning; return a complex unclear change to focused brainstorming and specification approval. Invalidate and rerun affected cleanup, review, and check evidence before the next summary.
 
-Every pause for user input must include a reply form beginning with `$smallpowers`. Preserve unrelated changes, and serialize overlapping or uncertain ownership.
+Every pause for user input must state the pending decision or missing information and retain enough artifact context to identify the active workflow. Preserve unrelated changes, and serialize overlapping or uncertain ownership.
 
 ## Authority
 

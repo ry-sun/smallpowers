@@ -37,11 +37,7 @@ If the review exposes a missing product or architectural decision, return to [br
 
 ## One combined approval gate
 
-Present the complete specification once and end with:
-
-> Approve this specification as the implementation contract? Reply `$smallpowers approved` and optionally add any of: `persist artifacts`, `strict TDD`, `plan only`.
->
-> `$smallpowers approved` with no modifiers keeps the specification and plan task-temporary, uses standard testing, writes the plan, and begins implementation.
+Present the complete specification once, ask the user whether to approve it as the implementation contract, and offer these optional choices: `persist artifacts`, `strict TDD`, and `plan only`. State that omitting a choice keeps the specification and plan task-temporary, uses standard testing, and begins implementation after planning.
 
 The three choices are independent and combinable:
 
@@ -49,9 +45,9 @@ The three choices are independent and combinable:
 - **Testing mode:** `strict TDD` requires RED-GREEN-REFACTOR for each behavior-changing implementation node. Omission selects proportionate standard testing.
 - **Stop condition:** `plan only` stops after the graph is written and self-reviewed. Omission selects implementation after planning.
 
-Do not add separate approvals for the options, the plan, or the executor. Questions, tentative agreement, quoted text, approval of an older revision, and partial acceptance are not approval of the presented contract.
+Do not add separate approvals for the options, the plan, or the executor. A direct, unambiguous approval of the currently presented revision is sufficient. Questions, tentative agreement, quoted text, approval of an older revision, and partial acceptance are not approval of the presented contract.
 
-After a completed run, [feedback.md](feedback.md) may normalize a clear, direct, imperative feedback request into a new contract body and record that same invocation as approval; do not ask the user to approve the exact delta twice. This exception applies only when the requested behavior and acceptance are already unambiguous. Tentative, quoted, third-party, or unresolved input returns to the ordinary approval gate.
+After a completed run, [feedback.md](feedback.md) may normalize a clear, direct, imperative feedback request into a new contract body and record that same request as approval; do not ask the user to approve the exact delta twice. This exception applies only when the requested behavior and acceptance are already unambiguous. Tentative, quoted, third-party, or unresolved input returns to the ordinary approval gate.
 
 ## Approval record
 
@@ -61,13 +57,13 @@ After valid approval, append a record outside the hashed contract body:
 Approval
 - contract revision: spec-rN
 - contract hash: <hash>
-- approved by: current direct user invocation
+- approved by: current direct user response
 - artifact lifetime: temporary | persisted at <path>
 - testing mode: standard | strict TDD
 - stop condition: implement | plan only
 ```
 
-The first approval defaults to `temporary`, `standard`, and `implement`. When a material revision needs reapproval, show the current choices beside the new revision and preserve each choice unless the user explicitly changes it. An unmodified `$smallpowers approved` then approves the new contract without resetting prior choices.
+The first approval defaults to `temporary`, `standard`, and `implement`. When a material revision needs reapproval, show the current choices beside the new revision and preserve each choice unless the user explicitly changes it. Approval without choice changes approves the new contract without resetting prior choices.
 
 Persist only after approval selected persistence. Relocation does not change the contract hash. Persistence creates repository files but does not authorize staging, committing, branch or worktree changes, pushing, or publication. A persisted approved `spec.md` and `plan.md` are intentional artifacts: protect them from feature cleanup unless a later direct user request explicitly changes or removes them.
 
