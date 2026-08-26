@@ -431,6 +431,22 @@ class SkillValidationTests(unittest.TestCase):
             errors,
         )
 
+    def test_rejects_force_recursive_rm_in_skill_resources(self) -> None:
+        for command in ("rm -rf generated", "rm -fr generated"):
+            with self.subTest(command=command):
+                errors = self._validate_fixture(
+                    frontmatter=(
+                        "name: smallpowers\n"
+                        "description: Use when $smallpowers is explicitly requested."
+                    ),
+                    resource_text=f"Run `{command}`.\n",
+                )
+
+                self.assertTrue(
+                    any("must not use force-recursive rm" in error for error in errors),
+                    errors,
+                )
+
     def test_rejects_missing_required_skill_resource(self) -> None:
         missing_resource = "references/feedback.md"
 

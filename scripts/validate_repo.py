@@ -117,6 +117,9 @@ REFERENCE_LINK_RE = re.compile(
     r"(?<!!)\[([^\]\n]+)\](?:\[([^\]\n]*)\])?"
 )
 REFERENCE_IMAGE_RE = re.compile(r"!\[[^\]\n]*\](?:\[[^\]\n]*\])?")
+FORCED_RECURSIVE_RM_RE = re.compile(
+    r"(?<![A-Za-z0-9_-])rm[ \t]+-(?:rf|fr)(?=$|[ \t\n`.,;:])"
+)
 
 
 class DuplicateJsonKeyError(ValueError):
@@ -166,6 +169,21 @@ def validate_no_foreign_skill_invocations(
         error = f"{owner_label} must not invoke ${invoked_skill}: {resource_label}"
         if error not in errors:
             errors.append(error)
+
+
+def validate_no_forced_recursive_remove(
+    text: str,
+    skill_name: str,
+    resource_label: str,
+    errors: list[str],
+) -> None:
+    """Reject force-recursive rm commands in user-facing skill resources."""
+
+    if FORCED_RECURSIVE_RM_RE.search(text):
+        errors.append(
+            f"skill {skill_name!r} resource must not use force-recursive rm: "
+            f"{resource_label}"
+        )
 
 
 def mentions_skill_invocation(text: str, skill_name: str) -> bool:
@@ -1244,6 +1262,12 @@ def validate_skills(require_skill: bool, errors: list[str]) -> int:
             except UnicodeDecodeError:
                 continue
             validate_no_foreign_skill_invocations(
+                resource_text,
+                skill_dir.name,
+                str(resource_path.relative_to(skill_dir)),
+                errors,
+            )
+            validate_no_forced_recursive_remove(
                 resource_text,
                 skill_dir.name,
                 str(resource_path.relative_to(skill_dir)),
