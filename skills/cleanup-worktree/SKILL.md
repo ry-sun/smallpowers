@@ -16,7 +16,7 @@ Activate only from the current user's direct `$cleanup-worktree [worktree-path]`
    - for squash or rebase workflows, every path changed by the target branch since its merge base has the same content and file mode at the target and primary tips.
 
    If neither proof succeeds, refuse cleanup. A merged review label by itself is not proof.
-4. Find obvious generated directories inside the target, such as `.venv`, `venv`, `target`, `node_modules`, `.next`, `dist`, `build`, `coverage`, and `__pycache__`. Show the exact paths, verify each is contained in the target, ignored by Git, and contains no tracked files, then delete those directories directly with `rm -rf`. Do not move them to Trash or a temporary directory.
+4. Find obvious generated directories inside the target, such as `.venv`, `venv`, `target`, `node_modules`, `.next`, `dist`, `build`, `coverage`, and `__pycache__`. Show the exact paths, verify each is contained in the target, ignored by Git, and contains no tracked files, then delete each directory directly with `rm -r -- <exact-validated-path>`. Do not use `-f`, move the directories to Trash, or move them to a temporary directory.
 5. Remove the worktree with `git worktree remove` without force. Delete its local branch; force deletion is allowed only because step 3 already proved squash/rebase equivalence. Never delete the remote branch.
 6. Remove now-empty branch-path parent directories with `rmdir`, stopping before the workspace container.
 
