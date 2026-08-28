@@ -1,7 +1,7 @@
 interface:
   display_name: "Work In"
-  short_description: "Reuse or create a branch worktree"
-  default_prompt: "Use $work-in with a branch name to reuse or create its worktree and bind this task to it."
+  short_description: "Locate, reuse, or create a branch worktree"
+  default_prompt: "Use $work-in with a branch name to locate or create its worktree, track a matching remote branch, and bind this task to it."
 
 policy:
   allow_implicit_invocation: false

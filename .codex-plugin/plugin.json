@@ -28,7 +28,7 @@
     "defaultPrompt": [
       "Use $smallpowers to design and implement this feature.",
       "Use $smallpowers-audit to find removable repository complexity.",
-      "Use $work-in refactor/worktree to create or reuse that branch worktree and bind this task to it."
+      "Use $work-in refactor/worktree to locate or create its worktree, track a matching remote branch, and bind this task."
     ]
   }
 }
