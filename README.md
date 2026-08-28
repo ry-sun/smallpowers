@@ -27,7 +27,7 @@ All Smallpowers skills are explicit-only: Codex may show their names and short d
 | `$simplify-docs [scope]` | Rewrites documentation around current usage and handoff knowledge. Omit the scope to inspect the whole repository. |
 | `$setup-worktree-workspace [repository-path]` | Moves a regular checkout into a simple worktree container after confirmation. |
 | `$restore-regular-workspace [workspace-path]` | Moves the sole canonical checkout back out after confirmation. |
-| `$work-in <branch-name>` | Reuses or creates the branch-mirrored worktree and binds the current task to it. |
+| `$work-in <branch-name>` | Reuses a local worktree, tracks an exact remote or pull-request source branch when present, or creates a new branch, then binds the current task to it. |
 | `$cleanup-worktree [worktree-path]` | Updates the primary branch, verifies merge/squash/rebase integration, and removes the clean local worktree and branch. |
 
 Smallpowers contains no global router, lifecycle hook, persistent mode, or skill-to-skill invocation.
@@ -52,7 +52,7 @@ The plan is an acyclic dependency graph: serial nodes run inline, while safe ind
 
 ## Worktree safety
 
-The four worktree skills are independent, self-contained entrypoints built from ordinary Git and shell commands. Setup and restore explain the exact move and wait for clear confirmation. Work-in maintains a task-scoped path and branch contract. Cleanup accepts ordinary merges plus squash and rebase integration, directly deletes verified generated directories to speed removal, and fast-forward-pulls the primary branch. The workflows do not push or delete remote branches.
+The four worktree skills are independent, self-contained entrypoints built from ordinary Git and shell commands. Setup and restore explain the exact move and wait for clear confirmation. Work-in maintains a task-scoped path and branch contract, discovers exact branch names across configured remotes, and fetches only the selected branch before creating a tracking worktree. Cleanup accepts ordinary merges plus squash and rebase integration, directly deletes verified generated directories to speed removal, and fast-forward-pulls the primary branch. The workflows do not push or delete remote branches.
 
 ## Development
 
