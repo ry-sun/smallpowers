@@ -39,7 +39,7 @@ Use progressive disclosure: read a reference when entering its stage, and pass o
 
 1. Inspect and brainstorm, then obtain approval for one complete specification. Do not make implementation edits before approval.
 2. Record the three independent choices at that gate. Derive one acyclic dependency graph without a second approval gate or executor-choice prompt.
-3. Stop after the self-reviewed graph when `plan only` was selected. Otherwise execute dependency-ready nodes: serial or ambiguous work stays with the controller, while safe independent branches may use agents.
+3. Stop after the self-reviewed graph when `plan only` was selected. Otherwise execute dependency-ready nodes: serial or ambiguous work stays with the controller, while two or more safe independent implementation branches run concurrently whenever agent capacity exists. Do not choose inline execution merely because it is simpler for the controller.
 4. Simplify only documentation and tests owned by the feature, then run bounded read-only correctness and quality reviews. Fixes belong to controller-owned remediation nodes.
 5. Run fresh integrated checks and produce the exact concise summary defined by the completion playbook.
 6. For direct post-summary feedback, fix a simple clear change directly; return a complex clear change to graph planning; return a complex unclear change to focused brainstorming and specification approval. Invalidate and rerun affected cleanup, review, and check evidence before the next summary.

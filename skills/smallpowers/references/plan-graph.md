@@ -37,13 +37,15 @@ Include a Mermaid graph followed by a complete definition for every node. Give n
 - **Actions:** concrete in-scope work in execution order;
 - **Acceptance:** observable proof that the outcome meets the specification;
 - **Checks:** focused commands or inspections, including expected evidence;
-- **Execution class:** `controller-only`, `branch-eligible`, `correctness reviewer`, or `quality reviewer`;
+- **Execution class:** `controller-only`, `branch-eligible`, `correctness reviewer`, or `quality reviewer`; every `controller-only` implementation node includes a concrete serialization reason, and every `branch-eligible` node states its independent ownership boundary;
 - **Effective testing mode:** `standard` or `strict TDD`, plus any approved node exception; initial nodes inherit the plan default, while later feedback may override new or invalidated nodes explicitly;
 - **Active owner:** `none` until execution, then the controller-assigned runtime owner; this is state, not part of the structural graph;
 - **State:** `pending`, `active`, `blocked`, or `complete`;
 - **Completion evidence:** `none` until complete; then effective testing mode, outputs, changed paths, exact checks and results, required RED/GREEN evidence or exception, observation time, and the repository state they were observed against.
 
 An edge is required when one node consumes another's output, reads something another may change, overlaps a write or mutable resource, or must precede another for safety. Ambiguous ownership or ordering means serialization. Never omit an edge merely to create parallel work.
+
+Classify an implementation node as `branch-eligible` whenever its contract is settled, its ownership is exact, its work and checks can run independently, and it needs no controller-only authority. Eligibility is structural: retain it even when the node is currently the only ready node or will later converge through an integration node. Use `controller-only` only for a specific dependency, resource, safety, authority, or unresolved-ownership constraint. Controller convenience, small node size, stable plan order, or future convergence is not a serialization reason.
 
 The graph must be acyclic. A node may not depend on itself, directly or transitively. Use a new graph revision for later feedback or remediation rather than drawing a cycle back to completed work.
 
@@ -79,6 +81,7 @@ Repair the plan until all of these are true:
 - interfaces, types, formats, producers, and consumers agree;
 - the graph is acyclic and reaches both terminal review nodes;
 - independently scheduled branches have disjoint writes and mutable resources;
+- every `controller-only` implementation node has a concrete unavoidable serialization reason, and every potential safe branch is `branch-eligible`;
 - every command is runnable in the named repository context;
 - strict-TDD nodes can produce truthful red and green evidence, or a foreseeable exception is unresolved and execution is blocked;
 - no placeholder, hidden product decision, unauthorized action, or speculative work remains;

@@ -29,8 +29,9 @@ At every scheduling step:
 3. Compute `ready`: pending nodes whose dependencies are complete, declared inputs exist, and resources are available.
 4. Sort ready nodes by their stable plan order, using node ID as the tie-breaker.
 5. If none are ready while nodes remain incomplete, diagnose a blocked dependency, missing input, undeclared edge, or cycle. Repair only mechanics fixed by the approved contract; otherwise stop at the relevant approval or authority boundary.
-6. If one node is ready, or independence is uncertain, execute the first ready node inline.
-7. If two or more ready implementation nodes are both `branch-eligible` and pairwise independent, dispatch one deterministic compatible wave under [parallel-workers.md](parallel-workers.md). A `controller-only` node is never dispatched to a worker. If capacity is unavailable, execute eligible nodes inline in sorted order.
+6. Scan all ready implementation nodes in stable order and construct the deterministic compatible `branch-eligible` wave defined by [parallel-workers.md](parallel-workers.md), bounded by available worker capacity. An earlier ready `controller-only` node does not prevent later compatible nodes from forming a wave.
+7. If the wave contains at least two nodes, dispatch it concurrently. This dispatch is required; do not execute an eligible wave inline merely because serial work would be simpler.
+8. Otherwise execute the first ready node inline. Record the exact reason no parallel wave formed: only one eligible node, a specific pairwise conflict or unresolved independence question, a controller-only constraint, or fewer than two available worker slots. Do not use a generic preference for serial execution.
 
 Review, cleanup, remediation, integration, and authority-sensitive nodes remain under direct controller scheduling even when they are ready alongside implementation nodes. A review node may use its assigned independent read-only reviewer, but it is never part of an implementation-worker wave. Do not manufacture branches or omit dependencies to delegate work.
 
