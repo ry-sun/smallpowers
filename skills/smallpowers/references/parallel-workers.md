@@ -2,6 +2,8 @@
 
 Parallel agents are an optimization inside the single DAG executor, not a second implementation workflow. The controller retains scheduling, integration, graph state, evidence, and all authority decisions.
 
+Parallel execution is the default for a safe ready branch, not an optional delegation preference. When at least two compatible ready implementation nodes satisfy this reference and capacity can support at least two workers, the controller must dispatch them in the same wave.
+
 ## Admit a parallel wave
 
 Dispatch only when at least two ready implementation nodes form a real graph branch and all of these are true:
@@ -16,7 +18,9 @@ Dispatch only when at least two ready implementation nodes form a real graph bra
 
 Ambiguity, overlapping ownership, shared mutable state, flaky global setup, or a likely cross-branch design decision requires serial execution. Do not split a coherent node or invent work merely to create a branch.
 
-Select a wave deterministically: scan ready implementation nodes in stable plan order, admit a node only if it is compatible with every node already selected, and leave incompatible nodes pending for a later frontier.
+Judge independence within the selected ready wave. A declared later convergence, stable plan ordering, small node size, or the controller's ability to perform the work inline does not make otherwise compatible nodes serial.
+
+Select a wave deterministically: scan ready implementation nodes in stable plan order, admit a node only if it is compatible with every node already selected, and stop when available worker capacity is filled. Leave incompatible or excess nodes pending for a later frontier; do not reject parallelism merely because capacity cannot hold every compatible ready node in one wave.
 
 ## Freeze ownership and dispatch
 

@@ -48,7 +48,7 @@ Specification approval records three choices:
 - whether behavior-changing work follows strict RED-GREEN-REFACTOR TDD;
 - whether to stop after planning or continue through implementation.
 
-The plan is an acyclic dependency graph: serial nodes run inline, while safe independent branches may run concurrently. After the final summary, direct feedback in the same task is handled directly, replanned, or returned to specification according to its dependency impact and uncertainty. Detailed stage playbooks live under [`skills/smallpowers/references/`](skills/smallpowers/references/) and load only when needed.
+The plan is an acyclic dependency graph: serial nodes run inline, while two or more safe ready independent implementation branches run concurrently whenever agent capacity exists. After the final summary, direct feedback in the same task is handled directly, replanned, or returned to specification according to its dependency impact and uncertainty. Detailed stage playbooks live under [`skills/smallpowers/references/`](skills/smallpowers/references/) and load only when needed.
 
 ## Worktree safety
 
