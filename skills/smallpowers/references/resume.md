@@ -4,7 +4,9 @@ Use for interrupted work, a plan-only handoff, or requested changes during or af
 
 ## Recover only the context needed
 
-Identify the intended feature from the conversation and available artifacts. Ask for an artifact or clarification only when multiple runs could apply or essential context is missing. A completed graph, content hashes, and persisted files are not prerequisites for a simple follow-up.
+Identify the intended feature and its absolute artifact paths from the conversation or handoff. After compaction or interruption, read `spec.md` and, once planning has begun, `plan.md` to recover the contract and progress, whether they are temporary or long-term documents. Resume the recorded stage if design or approval is still pending. Ask for clarification only when multiple runs could apply or essential context cannot be recovered.
+
+If an older run kept its artifacts only in context, or a temporary file has disappeared, reconstruct the missing files from available evidence before proceeding. Preserve known approval and options without requesting them again; clarify missing consequential decisions instead of inventing them. A simple follow-up still needs no graph or content hashes.
 
 Recover the agreed behavior, acceptance criteria, selected artifact and testing options, current plan if any, and actual repository state. Before resuming a persisted or interrupted plan, inspect relevant changes and partial work. Confirm any active writer before taking ownership; preserve user edits and do not blindly replay completed steps.
 
@@ -20,6 +22,6 @@ Read the full request and inspect the affected behavior. A clear request to chan
 - **Clear change with substantial dependencies:** update the agreed behavior and plan using [execution](execution.md), then proceed without a separate plan approval.
 - **Unresolved behavior or authority:** clarify the deciding issue. Use [design](design.md) for a material specification amendment, preserving decisions already settled. Continue independent authorized work where possible.
 
-Record a clear behavioral amendment in the existing specification when one is maintained. Preserve artifact lifetime and testing mode unless explicitly changed; keep persisted artifacts current without adding a feedback ledger. Testing-mode changes affect new or invalidated work, never historical claims. An already satisfied or incorrect premise calls for an explanation, not unnecessary edits.
+Record a clear behavioral amendment in `spec.md` and update `plan.md` with its progress and evidence, including for bounded feedback. Preserve artifact lifetime and testing mode unless explicitly changed; keep temporary and persisted files current without adding a feedback ledger. Testing-mode changes affect new or invalidated work, never historical claims. An already satisfied or incorrect premise calls for an explanation, not unnecessary edits.
 
-Finish with the changed outcome, evidence, and any remaining limitation, keeping enough context for the next continuation.
+Finish with the changed outcome, evidence, any remaining limitation, and both absolute artifact paths for the next continuation.

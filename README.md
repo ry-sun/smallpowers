@@ -41,6 +41,8 @@ specification -> approval -> plan -> implementation -> cleanup, review, checks
               -> result and follow-up changes
 ```
 
+The specification and plan are always written to `spec.md` and `plan.md`, including for small tasks. By default they live in a task-temporary directory outside the repository. Their paths are included in handoffs and compaction summaries, and the files stay current and available for continuation.
+
 Specification approval records three choices:
 
 - whether to persist `spec.md` and `plan.md` under `docs/smallpowers/YYYY-MM-DD-<topic>/`;

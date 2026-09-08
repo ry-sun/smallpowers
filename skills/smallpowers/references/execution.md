@@ -8,9 +8,11 @@ For a bounded outcome with straightforward ordering, use a short sequence of ste
 
 A graph needs stable task IDs, outcomes, dependencies, owned paths or shared resources, acceptance checks, and progress. Add detail only where omission would cause conflicting writes, hidden decisions, or uncertain acceptance. Include an edge when work consumes an output or conflicts with another task's reads, writes, or mutable resources. Keep it acyclic and cover every approved outcome.
 
-Check that inputs exist or have a producer, ownership is clear, and the planned checks can prove acceptance. Resolve mechanical gaps; return a material unresolved behavior decision to the user. Update a persisted `plan.md` when selected. No graph hashes, separate approval, or empty remediation tasks are required.
+Check that inputs exist or have a producer, ownership is clear, and the planned checks can prove acceptance. Resolve mechanical gaps; return a material unresolved behavior decision to the user. No graph hashes, separate approval, or empty remediation tasks are required.
 
-For `plan only`, hand off the specification, plan, selected options, and any blockers, with paths when files exist. Otherwise continue automatically.
+Before implementation or a plan-only handoff, write `plan.md` beside `spec.md`, even for a short plan. Record the repository/worktree, absolute specification path, approved options, steps, and current progress so the files are sufficient to resume. If an already approved specification exists only in context, save it using the [artifact rules](design.md) without reopening approval.
+
+For `plan only`, hand off both absolute file paths, selected options, and any blockers. Otherwise continue automatically.
 
 ## Implement and delegate
 
@@ -26,6 +28,6 @@ On conflicting writes, missing dependencies, or partial failure, stop affected w
 
 ## Carry work through
 
-Fix in-scope failures and keep the plan current enough for the next step or handoff. Record acceptance observations and check results against the relevant state; do not create a separate ledger for every routine action.
+Fix in-scope failures and update `plan.md` with completed work, remaining steps, blockers, and relevant acceptance/check evidence as the work progresses. Save this state before a handoff or compaction; do not create a separate ledger for every routine action.
 
 Preserve successful evidence while its inputs, outputs, and check conditions remain valid. Later changes invalidate only affected work and consumers that rely on it. When implementation is ready, follow [completion](completion.md).

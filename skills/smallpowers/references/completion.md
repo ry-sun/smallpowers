@@ -6,7 +6,7 @@ Use after implementation or an in-scope feedback fix. Scale the work below to th
 
 Inspect the final diff against the starting state. Simplify only documentation and test hunks changed by this feature and support made stale solely by those changes. A touched file is not wholly owned; retain material whose ownership or continued use is uncertain.
 
-Keep documentation focused on current behavior, usage, operations, and binding decisions. Consolidate duplicates and stale instructions while preserving unique information and inbound links. Protect persisted specifications and plans, repository instructions, legal notices, security policy, release history, and generated or vendored material from routine cleanup.
+Keep documentation focused on current behavior, usage, operations, and binding decisions. Consolidate duplicates and stale instructions while preserving unique information and inbound links. Protect temporary and persisted specifications and plans, repository instructions, legal notices, security policy, release history, and generated or vendored material from routine cleanup.
 
 Delete a test only after establishing that it has no project signal, protects obsolete behavior, or duplicates an equal-or-stronger retained witness at the same meaningful boundary. Preserve distinct risks and issue-linked regressions; transfer their issue reference and rationale to equivalent retained coverage unless the approved contract removes the behavior. Do not weaken assertions or alter production behavior to enable deletion. Check remaining uses before removing helpers, and regenerate through an in-scope source instead of hand-editing generated tests. After test deletion, recollect and run the affected tests.
 
@@ -24,6 +24,6 @@ The controller evaluates findings and fixes accepted in-scope issues. Distinguis
 
 Ensure the agreed outcome has evidence from the final relevant state. Run outstanding affected checks and repository-required checks; reuse results whose relevant inputs and conditions have not changed. Read failures, warnings, and skips. Do not rerun checks simply because the workflow entered a new stage.
 
-Report the outcome, important changes, actual validation, and remaining limitations. Include specification or plan paths when they exist and help continuation; omit empty fields and workflow bookkeeping.
+Save the final outcome, check evidence, and any unfinished work in `plan.md`, and ensure `spec.md` reflects approved amendments. Retain both files for continuation. Report the outcome, important changes, actual validation, remaining limitations, and both absolute artifact paths; omit empty fields and unrelated bookkeeping.
 
 Do not claim success while a required check fails, a material accepted finding is unresolved, or the agreed behavior is incomplete. Explain a blocker precisely, including the work remaining and what would allow it to continue.

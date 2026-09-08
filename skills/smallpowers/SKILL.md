@@ -19,7 +19,7 @@ Read only the references relevant to the current stage:
 
 ## Authority and completion
 
-Specification approval records artifact persistence, testing mode, and whether to stop after planning. Unless changed by the user, keep artifacts task-local, use standard testing, and continue through implementation.
+Specification approval records artifact lifetime, testing mode, and whether to stop after planning. Write the specification to `spec.md` and, when planning begins, the plan to `plan.md`, including for small tasks. By default, use task-temporary files outside the repository, standard testing, and implementation after planning. `Persist artifacts` selects long-term repository documents. Keep the files current and retain their absolute paths in handoffs and compaction summaries so work can resume from disk.
 
 Within the approved outcome, resolve routine implementation choices, fix failures, and address accepted review findings through completion. Ask only when missing information would materially change the result or the next action lacks authority. Complete independent authorized work while that decision is pending.
 
