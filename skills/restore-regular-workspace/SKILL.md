@@ -1,11 +1,11 @@
 ---
 name: restore-regular-workspace
-description: "Use when the user explicitly invokes $restore-regular-workspace to move the sole canonical checkout back out of a simple worktree workspace after confirmation."
+description: "Use when the user invokes $restore-regular-workspace to turn a worktree container back into a regular checkout."
 ---
 
 # Restore Regular Workspace
 
-Reverse workspace setup with ordinary shell and Git commands. Do not use a helper script.
+Reverse workspace setup with ordinary shell and Git commands.
 
 Activate only from the current user's direct `$restore-regular-workspace [workspace-path]` invocation. The invocation authorizes inspection and an explanation, not the move itself.
 
@@ -22,7 +22,7 @@ Only clear approval of this pending explanation authorizes the move. If the resp
 
 Recheck the same container, canonical checkout, and sole-worktree condition. Stop on drift.
 
-Use `mv` directly: move the canonical checkout to a unique temporary sibling, remove only the generated `AGENTS.md` and `.smallpowers/worktree-layout.json`, remove the now-empty `.smallpowers` and branch-path directories with `rmdir`, remove the empty container, then move the checkout from the temporary sibling back to the original container path. Do not copy the repository through Python or use a transaction helper.
+Use `mv` directly: move the canonical checkout to a unique temporary sibling, remove only the generated `AGENTS.md` and `.smallpowers/worktree-layout.json`, remove the now-empty `.smallpowers` and branch-path directories with `rmdir`, remove the empty container, then move the checkout from the temporary sibling back to the original container path.
 
 Verify the restored checkout and report its path, branch, HEAD, and removed scaffold. If a command fails, stop and report the exact current locations; never delete or overwrite the checkout while recovering.
 

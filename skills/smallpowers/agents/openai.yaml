@@ -1,6 +1,6 @@
 interface:
   display_name: "Smallpowers"
-  short_description: "Design and implement features through one graph"
+  short_description: "Design and implement features with clear acceptance"
   default_prompt: "Use $smallpowers to design and implement this feature from specification through reviewed code."
 
 policy:

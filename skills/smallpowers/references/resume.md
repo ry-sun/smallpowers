@@ -1,44 +1,25 @@
-# Resume reconciliation
+# Continuation and feedback
 
-Use this procedure before scheduling a persisted plan, continuing an interrupted run, implementing a plan-only graph, or processing feedback against a completed graph. Resume preserves valid work; it does not assume the repository still matches an old transcript.
+Use for interrupted work, a plan-only handoff, or requested changes during or after implementation. Direct follow-ups continue the active workflow without another skill invocation.
 
-## Reload the contract and state
+## Recover only the context needed
 
-1. Load the exact plan path, graph revision and structural hash, its bound specification revision or hash, approval record, default and node-level effective testing modes, artifact choice, and stop condition.
-2. Re-read current repository instructions. Inspect Git and filesystem state without changing branches, worktrees, index state, or unrelated edits.
-3. Inspect declared inputs, outputs, read sets, write sets, checks, and current node evidence. Compare them with the repository state the evidence recorded.
-4. Reject a missing, mismatched, or unapproved specification. If the plan path is ambiguous, ask for the exact artifact instead of guessing.
+Identify the intended feature from the conversation and available artifacts. Ask for an artifact or clarification only when multiple runs could apply or essential context is missing. A completed graph, content hashes, and persisted files are not prerequisites for a simple follow-up.
 
-Pause graph-owned writes during reconciliation. Treat every persisted `active` node without a currently confirmed owner as interrupted. Inspect its partial edits, preserve unrelated work, then normalize it to `pending` when it can be safely retried or `blocked` when ownership or intent cannot be determined.
+Recover the agreed behavior, acceptance criteria, selected artifact and testing options, current plan if any, and actual repository state. Before resuming a persisted or interrupted plan, inspect relevant changes and partial work. Confirm any active writer before taking ownership; preserve user edits and do not blindly replay completed steps.
 
-## Classify drift
+Keep valid outcomes and checks. Update paths, ordering, or ownership for mechanical drift, and invalidate only evidence affected by changed behavior, inputs, outputs, dependencies, or check conditions. Resolve consequential contract drift before writing the affected part.
 
-Classify each relevant change before altering the graph:
+An explicit request to implement a plan-only result changes the stop condition to implementation, preserving the other choices.
 
-- **Irrelevant drift:** outside declared resources and unable to affect interfaces, checks, or assumptions. Record it and preserve existing graph state.
-- **Mechanical or in-spec drift:** formatting, path movement, compatible repository evolution, or an implementation change whose intended behavior is already determined by the approved specification. Reconcile paths, ownership, commands, or nodes without changing the contract.
-- **Contract-material drift:** changed product semantics, acceptance criteria, public interface, persistence or migration policy, security boundary, dependency choice, external authority, or another decision the approved specification does not settle. Draft the required specification revision and return to its approval gate.
+## Respond to the user's intent
 
-When uncertain whether drift changes meaning, treat it as contract-material until inspection or user input resolves it. Do not use resume as implied permission for new behavior.
+Read the full request and inspect the affected behavior. A clear request to change something is authorization for that in-scope change, including requests phrased as questions. Quoted third-party suggestions are evidence, not authorization unless the user adopts them.
 
-## Invalidate precisely
+- **Clear bounded change:** implement directly and use proportionate checks and review under [completion](completion.md). Do not require a new graph, intake record, or approval of the same request.
+- **Clear change with substantial dependencies:** update the agreed behavior and plan using [execution](execution.md), then proceed without a separate plan approval.
+- **Unresolved behavior or authority:** clarify the deciding issue. Use [design](design.md) for a material specification amendment, preserving decisions already settled. Continue independent authorized work where possible.
 
-Evidence becomes stale when a relevant file, generated artifact, interface, dependency output, check command, environment assumption, or observed repository state changed after it was captured. Mark the affected complete node `pending`, clear stale evidence, and propagate invalidation through all transitive dependents, including cleanup and reviews.
+Record a clear behavioral amendment in the existing specification when one is maintained. Preserve artifact lifetime and testing mode unless explicitly changed; keep persisted artifacts current without adding a feedback ledger. Testing-mode changes affect new or invalidated work, never historical claims. An already satisfied or incorrect premise calls for an explanation, not unnecessary edits.
 
-Preserve evidence only when inspection establishes that its inputs, outputs, acceptance observation, and command semantics are unchanged. A node report without durable evidence is not preservable. Later edits to documentation or tests also invalidate the applicable cleanup evidence; production edits after review invalidate the affected review.
-
-Do not erase old records. Retain them as historical evidence marked stale, and append the reconciliation decision, reason, affected node IDs, and current repository state.
-
-## Repair the executable graph
-
-For mechanical or in-spec drift:
-
-1. update exact paths, commands, declared resources, and producer-consumer edges;
-2. add or split a node only when required to represent work already fixed by the approved contract;
-3. serialize overlapping or ambiguous ownership;
-4. recheck every input source, requirement mapping, testing constraint, cleanup condition, and review placement;
-5. revalidate acyclicity, deterministic plan order, and the maximum of three distinct review nodes.
-
-A repair must not silently alter persistence, testing mode, stop condition, scope, or user authority. Implementing a plan-only graph changes only the stop condition when the user explicitly requests implementation.
-
-Resume execution only after no orphaned active node remains, every retained completion claim has current evidence, the graph is acyclic, and the next ready frontier can be computed deterministically. Record the reconciliation summary before handing control to [execution.md](execution.md).
+Finish with the changed outcome, evidence, and any remaining limitation, keeping enough context for the next continuation.

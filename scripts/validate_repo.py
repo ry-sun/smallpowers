@@ -30,19 +30,10 @@ APPROVED_SKILLS = {
 REQUIRED_SKILL_RESOURCES = {
     "smallpowers": frozenset(
         {
-            "references/brainstorming.md",
+            "references/design.md",
             "references/completion.md",
-            "references/correctness-review.md",
             "references/execution.md",
-            "references/feature-cleanup.md",
-            "references/feedback.md",
-            "references/implementation-quality.md",
-            "references/parallel-workers.md",
-            "references/plan-graph.md",
-            "references/quality-review.md",
             "references/resume.md",
-            "references/reviewers.md",
-            "references/specification.md",
             "references/strict-tdd.md",
             "references/testing.md",
         }

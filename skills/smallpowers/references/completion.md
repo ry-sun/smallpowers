@@ -1,51 +1,29 @@
-# Evidence-based completion
+# Review and completion
 
-Enter successful completion only after implementation, applicable feature cleanup, both terminal reviews, and all accepted remediation describe the current repository state. Also load this reference for a terminal blocked handoff when missing authority, an unresolved contract decision, or a required check or review prevents further in-scope progress. Successful completion is an evidence gate; a blocked handoff reports what is not complete and what is needed to continue.
+Use after implementation or an in-scope feedback fix. Scale the work below to the changed behavior and risk.
 
-## Refresh the evidence
+## Clean up the feature's own changes
 
-After the last affected edit:
+Inspect the final diff against the starting state. Simplify only documentation and test hunks changed by this feature and support made stale solely by those changes. A touched file is not wholly owned; retain material whose ownership or continued use is uncertain.
 
-1. Derive required checks from the approved acceptance criteria, graph nodes, repository instructions, and changed components.
-2. Run every affected focused check and the repository-required integrated suite, build, lint, type check, migration check, or equivalent that is authorized and available.
-3. Read the complete relevant output and exit status. Record failures, warnings, skips, retries, and test counts; do not infer success from a truncated final line.
-4. Tie every completion claim to a command or direct inspection performed against the final state. Record the state or timestamp needed to show freshness.
-5. Inspect the final diff and generated artifacts for unintended files, debug output, stale comments, unrelated edits, missing callers, and specification drift.
-6. Confirm the terminal correctness and quality nodes passed against this same state and that no later write invalidated them.
+Keep documentation focused on current behavior, usage, operations, and binding decisions. Consolidate duplicates and stale instructions while preserving unique information and inbound links. Protect persisted specifications and plans, repository instructions, legal notices, security policy, release history, and generated or vendored material from routine cleanup.
 
-An agent report, previous run, cached result of unknown provenance, or check executed before an affected edit is not fresh proof. If a check cannot run, state the exact reason and the unverified consequence. Attribute a failure to pre-existing state only when a comparable baseline run or equivalent repository evidence proves that origin.
+Delete a test only after establishing that it has no project signal, protects obsolete behavior, or duplicates an equal-or-stronger retained witness at the same meaningful boundary. Preserve distinct risks and issue-linked regressions; transfer their issue reference and rationale to equivalent retained coverage unless the approved contract removes the behavior. Do not weaken assertions or alter production behavior to enable deletion. Check remaining uses before removing helpers, and regenerate through an in-scope source instead of hand-editing generated tests. After test deletion, recollect and run the affected tests.
 
-Do not claim completion when a required check fails, a blocking review finding remains accepted but unfixed, the current implementation differs materially from the approved specification, or required authority is missing. Report a blocked outcome with the precise next decision or action instead.
+## Review the result
 
-## Final reconciliation
+Review both correctness and avoidable complexity. A bounded change can use one controller pass. Use an independent read-only reviewer for substantial cross-component changes, sensitive boundaries, or uncertainty that would benefit from another perspective. If unavailable, perform the review yourself and disclose that limitation. Add an earlier checkpoint only where it prevents concrete downstream rework.
 
-Before reporting success, verify:
+Give a reviewer the agreed outcome and acceptance criteria, relevant base and current state, changed paths and surrounding context, known limitations, and check evidence. Require read-only work, no nested agents, and findings with location, consequence, evidence, and a safe repair direction. Do not supply a preferred verdict.
 
-- every acceptance criterion maps to current code and current evidence;
-- every graph node is complete or explicitly excluded by an approved revision;
-- documentation and test cleanup ran after their last affected edits;
-- every review finding has a recorded disposition and every accepted finding has remediation evidence;
-- both terminal review verdicts apply to the final state;
-- persisted specification and plan artifacts remain intact when selected;
-- unrelated user changes are identified and not presented as feature work;
-- no staging, commit, branch, worktree, push, publication, deployment, destructive cleanup, or external mutation occurred without separate authority.
+Check that acceptance criteria hold, changed callers and failure paths remain compatible, and evidence actually exercises the risk. For simplification, name what can disappear and why the replacement preserves semantics and supported versions. Keep required security, data-loss protection, compatibility, accessibility, and justified physical or operational controls. Do not turn stylistic preferences into findings.
 
-## Concise Summary
+The controller evaluates findings and fixes accepted in-scope issues. Distinguish pre-existing or unrelated observations with evidence. If a finding needs a new behavior decision or authority, seek that decision while continuing independent authorized work. Re-review the repair and affected boundaries; a small fix does not automatically require replaying every review. Stop reopening settled style choices once acceptance and material findings are resolved.
 
-Use this exact heading and field order. Keep each field short but concrete; write `none` rather than omitting a field.
+## Verify and hand off
 
-- **Outcome:** implemented behavior or blocked outcome.
-- **Specification:** approved revision or hash and absolute path when persisted.
-- **Plan:** absolute path when available and final graph revision.
-- **Important components:** current files, interfaces, or data flows that matter to use and maintenance.
-- **Cleanup:** documentation and tests removed, consolidated, retained for distinct risk, or not changed.
-- **Reviews:** terminal correctness and quality verdicts; finding IDs with `accepted`, `needs clarification`, `contract conflict`, `out of scope`, or `rejected` dispositions.
-- **Fresh checks:** exact commands and final results, including failures, warnings, skips, and relevant counts.
-- **Remaining or unverified:** known limitations, blocked checks, pre-existing failures proven by baseline, and follow-up decisions; otherwise `none`.
-- **Controller rulings:** material reviewer pushback, approved testing exceptions, deliberate shortcuts with their ceiling and revisit trigger, or `none`.
+Ensure the agreed outcome has evidence from the final relevant state. Run outstanding affected checks and repository-required checks; reuse results whose relevant inputs and conditions have not changed. Read failures, warnings, and skips. Do not rerun checks simply because the workflow entered a new stage.
 
-Do not add a turn diary, praise, or unsupported claims. The summary must stand alone even when earlier progress messages are hidden.
+Report the outcome, important changes, actual validation, and remaining limitations. Include specification or plan paths when they exist and help continuation; omit empty fields and workflow bookkeeping.
 
-For a completed graph, retain the completed plan's absolute path in the summary when one exists so later feedback can be matched to the run. If the artifact policy intentionally provides no path, later feedback may omit it only when exactly one completed run remains accessible to the controller.
-
-For a blocked graph, end with the actual blocker, the decision or authority needed, and the applicable specification or plan context. Do not imply that a blocked graph is complete.
+Do not claim success while a required check fails, a material accepted finding is unresolved, or the agreed behavior is incomplete. Explain a blocker precisely, including the work remaining and what would allow it to continue.
