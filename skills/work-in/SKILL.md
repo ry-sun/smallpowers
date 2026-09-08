@@ -1,6 +1,6 @@
 ---
 name: work-in
-description: "Use when the user explicitly invokes $work-in with a branch name to locate, reuse, or create its worktree and bind the current task to it."
+description: "Use when the user invokes $work-in to bind a task to a branch worktree."
 ---
 
 # Work In

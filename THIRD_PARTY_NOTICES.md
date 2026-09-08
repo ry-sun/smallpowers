@@ -6,7 +6,7 @@ Smallpowers is inspired by and draws heavily from the two upstream projects name
 
 Smallpowers adapts software-development workflow concepts from [obra/superpowers](https://github.com/obra/superpowers), version 6.3.0, source revision `b36e0829c6d0140e93cfef2ca599b1b07d4a7797`.
 
-The reviewed source set includes Superpowers' brainstorming, plan-writing, plan execution, parallel-agent, test-driven-development, code-review, completion-verification, Git-worktree isolation, and development-branch completion guidance. Forge-selection behavior was also reviewed from Superpowers history at revision `24ae4c800109494cb2fe06c110dd9f0da023de89`. Smallpowers adapts the decision-changing procedures while retaining its own explicit-only entrypoints, dependency-graph scheduler, approval boundary, transactional workspace model, and bounded-review model.
+The reviewed source set includes Superpowers' brainstorming, plan-writing, plan execution, parallel-agent, test-driven-development, code-review, completion-verification, Git-worktree isolation, and development-branch completion guidance. Forge-selection behavior was also reviewed from Superpowers history at revision `24ae4c800109494cb2fe06c110dd9f0da023de89`. Smallpowers adapts the decision-changing procedures while retaining its own explicit-only entrypoints, proportionate planning, specification approval, worktree safety boundaries, and risk-based review.
 
 Superpowers is distributed under the following MIT License:
 

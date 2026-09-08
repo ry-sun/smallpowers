@@ -448,7 +448,7 @@ class SkillValidationTests(unittest.TestCase):
                 )
 
     def test_rejects_missing_required_skill_resource(self) -> None:
-        missing_resource = "references/feedback.md"
+        missing_resource = "references/resume.md"
 
         def mutate(_repository_root: Path, skill_dir: Path) -> None:
             (skill_dir / missing_resource).unlink()
@@ -467,10 +467,10 @@ class SkillValidationTests(unittest.TestCase):
         )
 
     def test_rejects_required_resource_without_utf8_instructions(self) -> None:
-        required_resource = "references/feedback.md"
+        required_resource = "references/resume.md"
         cases = {
             "heading only": (
-                b"# Feedback\n\n## Entry conditions\n",
+                b"# Continuation\n\n## Entry conditions\n",
                 "must contain a non-heading instruction line",
             ),
             "invalid UTF-8": (
@@ -529,7 +529,7 @@ class SkillValidationTests(unittest.TestCase):
                 )
 
     def test_allows_required_resource_text_whitespace_controls(self) -> None:
-        required_resource = "references/feedback.md"
+        required_resource = "references/resume.md"
 
         def mutate(_repository_root: Path, skill_dir: Path) -> None:
             (skill_dir / required_resource).write_text(
@@ -549,13 +549,13 @@ class SkillValidationTests(unittest.TestCase):
         self.assertEqual(errors, [])
 
     def test_rejects_required_resource_symlink_alias(self) -> None:
-        required_resource = "references/feedback.md"
+        required_resource = "references/resume.md"
 
         def mutate(_repository_root: Path, skill_dir: Path) -> None:
             resource_path = skill_dir / required_resource
             self._replace_with_symlink(
                 resource_path,
-                resource_path.with_name("feedback-target.md"),
+                resource_path.with_name("resume-target.md"),
             )
 
         errors = self._validate_fixture(
@@ -577,7 +577,7 @@ class SkillValidationTests(unittest.TestCase):
         )
 
     def test_rejects_required_resource_missing_from_router(self) -> None:
-        required_resource = "references/feedback.md"
+        required_resource = "references/resume.md"
 
         def mutate(_repository_root: Path, skill_dir: Path) -> None:
             skill_path = skill_dir / "SKILL.md"
@@ -607,29 +607,29 @@ class SkillValidationTests(unittest.TestCase):
         )
 
     def test_hidden_router_links_do_not_reach_required_resources(self) -> None:
-        required_resource = "references/feedback.md"
+        required_resource = "references/resume.md"
         hidden_links = {
             "HTML comment": (
-                "<!-- [feedback](references/feedback.md) -->\n"
+                "<!-- [resume](references/resume.md) -->\n"
             ),
             "fenced code": (
-                "```markdown\n[feedback](references/feedback.md)\n```\n"
+                "```markdown\n[resume](references/resume.md)\n```\n"
             ),
-            "indented code": "    [feedback](references/feedback.md)\n",
-            "inline code": "`[feedback](references/feedback.md)`\n",
+            "indented code": "    [resume](references/resume.md)\n",
+            "inline code": "`[resume](references/resume.md)`\n",
             "escaped inline link": (
-                "\\[feedback](references/feedback.md)\n"
+                "\\[resume](references/resume.md)\n"
             ),
             "escaped reference link": (
-                "\\[Feedback][feedback-route]\n\n"
-                "[feedback-route]: references/feedback.md\n"
+                "\\[Continuation][resume-route]\n\n"
+                "[resume-route]: references/resume.md\n"
             ),
             "blockquoted indented link": (
-                ">     [feedback](references/feedback.md)\n"
+                ">     [resume](references/resume.md)\n"
             ),
             "blockquoted tilde fence": (
                 "> ~~~markdown\n"
-                "> [feedback](references/feedback.md)\n"
+                "> [resume](references/resume.md)\n"
                 "> ~~~\n"
             ),
         }
@@ -669,18 +669,18 @@ class SkillValidationTests(unittest.TestCase):
                 )
 
     def test_allows_supported_router_link_forms(self) -> None:
-        required_resource = "references/feedback.md"
+        required_resource = "references/resume.md"
         replacements = {
             "inline after even backslash run": (
-                "\\\\[feedback](references/feedback.md)\n"
+                "\\\\[resume](references/resume.md)\n"
             ),
             "reference after even backslash run": (
-                "\\\\[Feedback][feedback-route]\n\n"
-                f"[feedback-route]: {required_resource}\n"
+                "\\\\[Continuation][resume-route]\n\n"
+                f"[resume-route]: {required_resource}\n"
             ),
             "visible reference": (
-                "- [Feedback playbook][feedback-route]\n\n"
-                f"[feedback-route]: {required_resource}\n"
+                "- [Continuation playbook][resume-route]\n\n"
+                f"[resume-route]: {required_resource}\n"
             ),
         }
 

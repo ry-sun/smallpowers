@@ -1,6 +1,6 @@
 ---
 name: cleanup-worktree
-description: "Use when the user explicitly invokes $cleanup-worktree to remove one clean worktree whose changes are already present in the primary worktree."
+description: "Use when the user invokes $cleanup-worktree to remove a clean, integrated local worktree."
 ---
 
 # Cleanup Worktree

@@ -21,7 +21,7 @@ All Smallpowers skills are explicit-only: Codex may show their names and short d
 
 | Invocation | What it does |
 |---|---|
-| `$smallpowers` | Designs and implements a feature through specification, dependency-graph planning, implementation, cleanup, and review. |
+| `$smallpowers` | Designs and implements a feature from an approved specification through proportionate planning, implementation, and review. |
 | `$smallpowers-audit` | Reports removable complexity across a repository without changing files. |
 | `$simplify-test-cases [scope]` | Removes redundant or trivial tests while preserving meaningful coverage. Omit the scope to inspect the whole repository. |
 | `$simplify-docs [scope]` | Rewrites documentation around current usage and handoff knowledge. Omit the scope to inspect the whole repository. |
@@ -37,9 +37,8 @@ Smallpowers contains no global router, lifecycle hook, persistent mode, or skill
 Invoke `$smallpowers` to take one feature through a single lifecycle:
 
 ```text
-brainstorm -> specification -> approval -> dependency graph -> implementation
-          -> changed-test/doc cleanup -> correctness review -> quality review
-          -> integrated checks -> concise summary
+specification -> approval -> plan -> implementation -> cleanup, review, checks
+              -> result and follow-up changes
 ```
 
 Specification approval records three choices:
@@ -48,7 +47,9 @@ Specification approval records three choices:
 - whether behavior-changing work follows strict RED-GREEN-REFACTOR TDD;
 - whether to stop after planning or continue through implementation.
 
-The plan is an acyclic dependency graph: serial nodes run inline, while two or more safe ready independent implementation branches run concurrently whenever agent capacity exists. After the final summary, direct feedback in the same task is handled directly, replanned, or returned to specification according to its dependency impact and uncertainty. Detailed stage playbooks live under [`skills/smallpowers/references/`](skills/smallpowers/references/) and load only when needed.
+Small features use short plans; work with meaningful dependencies, parallel ownership, or recovery needs uses an acyclic dependency graph. Safe ready independent tasks run concurrently when worker capacity is available. Review covers correctness and avoidable complexity, with independent reviewers where risk warrants them. Passing checks are reused while their relevant inputs remain unchanged.
+
+Once started, ordinary replies continue the workflow without another invocation. Clear bounded feedback is implemented directly; changes with substantial dependencies are replanned, and unresolved behavior returns to design. Preserve the selected options and valid completed work. Conditional guidance lives under [`skills/smallpowers/references/`](skills/smallpowers/references/).
 
 ## Worktree safety
 

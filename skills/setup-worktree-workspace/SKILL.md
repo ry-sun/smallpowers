@@ -1,11 +1,11 @@
 ---
 name: setup-worktree-workspace
-description: "Use when the user explicitly invokes $setup-worktree-workspace to move one regular Git checkout into a simple worktree workspace after confirmation."
+description: "Use when the user invokes $setup-worktree-workspace to convert a checkout into a worktree container."
 ---
 
 # Setup Worktree Workspace
 
-Move a regular Git checkout into a container whose subdirectories hold the canonical checkout and later linked worktrees. Keep this workflow self-contained: use ordinary shell and Git commands, not a helper script.
+Move a regular Git checkout into a container whose subdirectories hold the canonical checkout and later linked worktrees. Use ordinary shell and Git commands.
 
 Activate only from the current user's direct `$setup-worktree-workspace [repository-path]` invocation. The invocation authorizes inspection and an explanation, not the move itself.
 
@@ -25,7 +25,7 @@ Only clear approval of this pending explanation authorizes the move. If the resp
 
 Recheck that the same repository is still at the same path and still has no linked worktrees. Stop on drift or a destination collision.
 
-Use `mv` directly: move the checkout to a unique temporary sibling, create the empty container at the original path, then move the temporary checkout into the canonical subfolder. Create the two scaffold files described above. Do not copy the repository through Python or use a transaction helper.
+Use `mv` directly: move the checkout to a unique temporary sibling, create the empty container at the original path, then move the temporary checkout into the canonical subfolder. Create the two scaffold files described above.
 
 Verify the canonical checkout with Git and report its path, branch, HEAD, and the created scaffold. If a command fails, stop and report the exact current locations; never delete or overwrite the checkout while recovering.
 

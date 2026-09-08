@@ -11,13 +11,13 @@
   "interface": {
     "displayName": "Smallpowers",
     "shortDescription": "Explicit development and Git-worktree workflows.",
-    "longDescription": "Smallpowers instructions stay unloaded until explicitly invoked, then progressively load detailed feature stages, feedback routing, complexity audits, scoped cleanup, or bounded Git-worktree workspace operations.",
+    "longDescription": "Smallpowers instructions stay unloaded until explicitly invoked, then load only the guidance needed for feature development, feedback, simplification, or bounded Git-worktree operations.",
     "developerName": "Ryan Sun",
     "category": "Developer Tools",
     "capabilities": [
       "Approved feature specifications",
-      "Dependency-graph execution",
-      "Post-implementation feedback routing",
+      "Proportionate planning and safe parallel execution",
+      "Direct follow-up changes and resumable plans",
       "Correctness and implementation-quality review",
       "Repository, test, and documentation simplification",
       "Simple worktree workspace setup and restore",
